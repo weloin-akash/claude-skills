@@ -16,11 +16,12 @@
     "@clack/prompts": "^0.10.0"
   },
   "files": [
+    "LICENSE",
     "bin",
     "skills"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }
