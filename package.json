@@ -1,5 +1,5 @@
 {
-  "name": "weloin-skills",
+  "name": "@weloin/claude-skills",
   "version": "0.1.0",
   "description": "Weloin's Claude Code skills library + cross-platform installer (symlinks skills into ~/.claude/skills)",
   "type": "module",
@@ -19,6 +19,8 @@
     "bin",
     "skills"
   ],
-  "license": "UNLICENSED",
-  "private": true
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "UNLICENSED"
 }

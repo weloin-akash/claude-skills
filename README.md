@@ -1,12 +1,13 @@
-# weloin-skills
+# @weloin/claude-skills
 
 Weloin's Claude Code skills library + installer. Skills live in `skills/`; the CLI symlinks them into `~/.claude/skills` so editing a skill here updates it everywhere instantly.
 
 ## Install (global)
 
 ```bash
-npm install -g .        # from this repo — or: npm link
-weloin-skills           # interactive picker
+npm install -g @weloin/claude-skills   # released
+npm install -g .                       # from this repo — or: npm link
+weloin-skills                          # interactive picker
 ```
 
 `npm update`/reinstall re-runs `sync` automatically (postinstall) — previously installed skills re-link themselves.
