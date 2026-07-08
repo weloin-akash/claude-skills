@@ -32,6 +32,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 | `gates` (alias `tests`) | 01 §Q15b + 04 + 06 | Show current `gates`; re-derive candidates, multi-select; update STATE.md; medium+ → create/update gatekeeper agents (04 §2); offer immediate gate run on current diff → gate report. Explicit invocation = opt-in — Q15b's AUTO/GUIDED condition does NOT apply here |
 | `autonomy` | — (rule 4) | Show `autonomy_default` + per-phase override; ask new; update STATE.md (+ progress header if mid-phase) |
 | `strategy` | 01 §Q11 | Re-ask with recommendation; update STATE.md + CLAUDE.md; `integration-test-first` → copy rule block (templates) |
+| `promote` (alias `maturity`) | 01 §Q4b + 05 | Show current `maturity`; upgrade one level (prototype→mvp→production): read `40-debt.md` (missing at prototype/mvp → warn, offer reconstruction scan); re-ask questions old level skipped (01 pruning rule); hardening plan via 05 §Hardening; user approves; STATE.md `maturity` + CLAUDE.md updated same commit. Downgrade = field edit + STATE.md note, no plan |
 | `agents` | 04 | Update-aware roster review (04 §2) |
 | `plan` | 05 | Plan next phase now (macro-plan ask included) |
 | `status` | — | STATE.md + progress + `git log --oneline -5` → compressed report; zero writes |
@@ -41,7 +42,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 ## SSOT: docs/project/
 
-`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `repo_structure` (single|monorepo|polyrepo), `make_workflow` (none|A|B|C), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
+`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `maturity` (prototype|mvp|production), `repo_structure` (single|monorepo|polyrepo), `make_workflow` (none|A|B|C), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
 
 ## Global Rules (apply in every phase)
 
@@ -55,6 +56,18 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
    | Agents | builder + reviewer | 3–5 roster | full roster + security + devops |
    | Review gates | reviewer per phase | per plan | per plan + cross-agent conformance |
    | Quality gates (if `gates` opted, Q15b) | orchestrator inline checklist | gatekeeper agents | gatekeeper agents |
+
+2b. **Maturity overrides.** `maturity` in STATE.md = quality intent, orthogonal to `scale`: scale sets ceremony baseline (rule 2), maturity overrides quality bar. Conflict → maturity wins on quality items (tests, gates, security, config/DB discipline), scale wins on ceremony items (doc tree, roster size, interview length).
+
+   | | prototype | mvp | production |
+   |---|---|---|---|
+   | Tests | smoke only | core paths | full per Q13 |
+   | Gates (Q15b) | skipped silently | offered, optional | offered, universals recommended |
+   | Arch sections (03) | skip security/risks/NFR | boundaries mandatory (isolation test) | all + observability |
+   | Config/secrets | hardcode OK | `.env` | secrets manager from start |
+   | DB | drop-and-recreate OK | migrations from first schema | migrations + versioning |
+   | Debt ledger `40-debt.md` | required | required | n/a |
+   | DoD (06) | runs, demo path works; reviewer at plan-end only | task tests pass + reviewer per loop | full loop + gates |
 
 3. **Hybrid delegation.** Before doing a job inline, check if the listed skill is installed (appears in available-skills). Installed → invoke it. Missing → use the built-in fallback in the reference file. Never duplicate a delegated skill's logic.
 
@@ -86,3 +99,5 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 - Reading all reference files "for context" — load only the routed one
 - Restructuring an adopted project's existing layout
 - Skipping the interview because the project "is simple" — run it at `small` scale instead
+- Conscious shortcut at prototype/mvp maturity without a DEBT row in the same commit
+- Hardening or promoting maturity without consulting `docs/project/40-debt.md`
