@@ -30,6 +30,11 @@
 
 ### Round C — Stack & strategy (always; batched choices)
 10. Architecture: monolith / modular monolith / multi-service / microservices / monorepo multi-service / suggest.
+10b. Repo structure — recommend from Q10 (multi-service → monorepo; monolith → single-app unless shared libs planned):
+    - **single-app repo** — one app, flat layout.
+    - **monorepo** — `apps/` + `packages/`; valid even for single app + shared libs.
+    - **polyrepo** — recorded as note only; this setup covers the current repo.
+    → STATE.md `repo_structure: single|monorepo|polyrepo`. Drives architecture layout (03), builder-per-boundary scoping to `apps/*` (04), plan paths (05).
 11. Development strategy — make choosing easy: every option carries a one-line "pick when", and the skill derives ONE recommendation from answers so far (API complexity, architecture, scale) and lists it first labeled "(Recommended)". AskUserQuestion caps at 4 options → show recommendation + 3 best fits; remaining reachable via Other.
     - **vertical-slice** — pick when features ship as independent end-to-end slices (default for most apps).
     - **integration-test-first** (contract-by-test) — pick for complex API / multi-service / medium+ scale. Order per feature: API docs → integration tests committed as contract → implement → unit tests (per Q13) → suite green UNMODIFIED. Tests conform code to concept, never reverse. RECOMMEND when project has complex API surface, multi-service architecture, or medium+ scale.
@@ -55,7 +60,8 @@
     - `perf-budget` (NFR targets or stated perf constraint): budget benches on touched paths.
     → STATE.md `gates: [...]`. Empty selection → gating off, zero downstream footprint. Enforcement is scale-dependent (see 04/06): small → orchestrator inline checklist; medium+ → read-only gatekeeper agents.
 16. CI/CD preference; commit style (conventional/free); lint/format tools.
-17. Local infra: docker compose / native / devcontainers / suggest.
+17. Local + deployed workflow — Make-based canonical interface wanted? Convention: `make <env|surface> <action> [args]` (`make local up`, `make local nuke`, `make staging deploy`, `make app run ios`, `make setup`). Scope (mirrors `weloin:deploy-setup`): **A** local-only (Makefile + compose + scripts) / **B** deploy-only (Helm + CI + deploy.sh) / **C** both / **none**. Sub-choice: local infra = docker compose / native / devcontainers / suggest.
+    → STATE.md `make_workflow: none|A|B|C` + local-infra note. CLAUDE.md gains `## Commands` section (templates.md); rule: env/lifecycle ops via make targets — docs never instruct raw docker/kubectl/helm when a target exists. Built at infra/deploy phase via `weloin:deploy-setup` (05) — asked now, never built now.
 18. Security auditing agent wanted? (report-only scanner; categories scoped to stack) — medium+ only, auto-include for large.
 
 ### Round E — Scope (always)
