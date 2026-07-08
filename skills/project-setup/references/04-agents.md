@@ -57,7 +57,7 @@ Memory: native `memory: project` frontmatter — no manual MEMORY.md seeding. Me
 
 **Orchestrator:** lists all agents it delegates to; retry rule (3 failures on a task → escalate to user); session start = read STATE.md + progress + git log; **alignment enforcement**: verify delegated work conforms to `strategy` and doesn't break other agents' assumptions; agent-conflict (scope overlap, contradictory conventions, incompatible shared interfaces) → escalate to user, never resolve silently; at plan boundaries dispatch reviewer for cross-agent conformance.
 
-**Builders:** read CLAUDE.md + STATE.md before work; report format includes "shared interfaces touched" (APIs, types, schemas) so orchestrator verifies alignment; follow `strategy` and doc-style rules.
+**Builders:** read CLAUDE.md + STATE.md before work; report format includes "shared interfaces touched" (APIs, types, schemas) so orchestrator verifies alignment, and at prototype/mvp maturity "shortcuts taken" (debt candidates — orchestrator records rows in `docs/project/40-debt.md`, 06 task loop); follow `strategy` and doc-style rules.
 
 **Reviewer:** checklist derived from spec; cross-agent conformance at plan boundaries (contracts match, conventions uniform, no scope drift); findings → orchestrator with file:line.
 
