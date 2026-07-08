@@ -10,6 +10,8 @@ Scale-driven baseline:
 | medium | orchestrator, 1 builder per boundary (max 3), tester, reviewer |
 | large | orchestrator, builders per boundary, tester, reviewer, security (report-only), devops |
 
+Gated dev (STATE.md `gates` non-empty): `small` adds NO agents — orchestrator runs the gate checklist inline (06). `medium`/`large` add one read-only **gatekeeper** agent per selected gate (`.claude/agents/<gate>-gate.md`, e.g. `regression-gate`); builders-vs-gatekeepers split — builders never grade own homework.
+
 Builder split rule: 1 per tech boundary (frontend/backend/service-per-language); same-language monorepo → split by domain, max 2.
 
 **Model tags** (user adjusts): orchestrator + architecturally-complex builders → `opus`; mechanical builders, tester, reviewer, security → `sonnet`; `inherit` acceptable default when user has no preference.
@@ -47,6 +49,7 @@ memory: project
 | reviewer | Read, Glob, Grep, Bash (read-only cmds only — state in instructions; NO Edit/Write) |
 | security | Read, Bash, Glob, Grep, Write (reports only) |
 | devops | Read, Edit, Write, Bash, Glob, Grep |
+| gatekeeper | Read, Glob, Grep, Bash (test/bench runs only — state in instructions), Write (gate reports only; NO source edits) |
 
 Memory: native `memory: project` frontmatter — no manual MEMORY.md seeding. Memory holds patterns/decisions/context only; progress lives in `docs/project/progress/` (pointer, never duplicate).
 
@@ -59,6 +62,8 @@ Memory: native `memory: project` frontmatter — no manual MEMORY.md seeding. Me
 **Reviewer:** checklist derived from spec; cross-agent conformance at plan boundaries (contracts match, conventions uniform, no scope drift); findings → orchestrator with file:line.
 
 **Security (if opted in):** report-only — never fixes code. Categories scoped to actual stack (deps audit if package manager; auth review if authn; tenant isolation CRITICAL if multi-tenant; API input validation if APIs; container scan if Docker; SAST always; client-side if frontend). Reports → `docs/project/security/audit-YYYY-MM-DD.md`, findings = severity/location/impact/evidence/remediation/owning-agent. Profiles: quick / standard / deep.
+
+**Gatekeeper (gated dev, medium+):** one agent per selected gate; verifies only, never fixes. Runs its gate's checks (per gate definition in 01 Q15b) against the task-group diff; writes its row + evidence into `docs/project/gates/<task-group>-gate.md` (templates.md); verdict PASS / DONE_WITH_CONCERNS / FAIL — evidence mandatory (test counts, diffs, bench numbers), bare verdicts invalid. Path-triggered where scoping is clear (e.g. contract dirs → `contract-compat-gate`); otherwise orchestrator dispatches at task-group boundary, after reviewer, before group counts done. `strategy: integration-test-first` → `regression-gate` also proves integration-test immutability (diff vs contract commit; weakened assertion = FAIL). Model tag: `sonnet`.
 
 ## 5. CLAUDE.md + settings
 
