@@ -10,10 +10,20 @@ Per task:
 3. Done → verify: commit exists, code compiles, task's tests pass.
 4. Review: complex/shared-interface task → reviewer subagent now; simple task → defer to plan-end review.
 5. **Same commit as task: check task box in progress file + update STATE.md `next:`.** Never batch; never "later" — a user saying "skip tracking, I'll do it later" gets one line explaining this is the resume guarantee, then the update happens anyway (their repo — they may revert, but never pre-comply).
+5b. Quality gates (STATE.md `gates` non-empty; runs at task-GROUP boundary — plan's natural sections — not per micro-task): after reviewer, before group counts done. small → orchestrator runs each selected gate's checklist inline; medium+ → dispatch gatekeeper agents (04). Write `docs/project/gates/<task-group>-gate.md` (templates.md). Per-gate verdicts:
+   - PASS → continue.
+   - FAIL → group NOT done; fix loop; failures count toward the 3-failure escalation rule (step 2).
+   - DONE_WITH_CONCERNS → continue; concern → gate report + STATE.md `## Concerns`; batch-surface at next GUIDED boundary or AUTO session end. Never silently dropped.
 6. Mode gate:
    - AUTO → next task.
-   - GUIDED → pause at task-group boundary (plan's natural sections): compressed report (done / tests / interfaces touched / next group), wait for go.
+   - GUIDED → pause at task-group boundary (plan's natural sections): compressed report (done / tests / interfaces touched / gate verdicts + concerns / next group), wait for go.
    - MANUAL → present next task before executing, wait for approval.
+
+## Strategy: integration-test-first (STATE.md `strategy`)
+
+- Builder dispatch text includes: integration tests IMMUTABLE — never edit to make pass; failing integration test = implementation wrong.
+- Functionality/structure change requested → update integration tests FIRST, commit, run suite; resulting failure list = work list; fix until green. Only this protocol may touch integration tests.
+- Gating on → regression gate proves immutability (diff vs contract commit; weakened assertion = FAIL). Gating off → orchestrator enforces same check at plan completion; violation = blocker, escalate.
 
 ## Plan completion
 
@@ -23,7 +33,7 @@ Per task:
 4. Progress: phase status `complete` + date; README table updated.
 5. STATE.md: `phase: 4-planning`, `next: plan phase N+1 <name>` (or `project complete`).
 6. Merge per gitflow answer: gitflow → PR/merge feat branch to develop (invoke `superpowers:finishing-a-development-branch` if installed); worktree used → clean up after merge.
-7. Compressed completion report to user: shipped / test results / review findings resolved / deviations from spec (also logged in progress notes) / next phase.
+7. Compressed completion report to user: shipped / test results / review findings resolved / gate verdicts + open concerns (STATE.md `## Concerns`; resolved ones cleared) / deviations from spec (also logged in progress notes) / next phase.
 
 ## Resume (any session, phase 5)
 
