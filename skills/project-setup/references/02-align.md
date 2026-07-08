@@ -25,7 +25,7 @@ Batched AskUserQuestion; ask ONLY what audit cannot answer:
 3. Scale (sets `scale` in STATE.md).
 3b. Maturity — propose inferred level with one-line evidence ("no tests, secrets in code → prototype — agree?"); user confirms/overrides → STATE.md `maturity`. prototype|mvp → create `docs/project/40-debt.md`. Inference sets the go-forward bar only — never triggers restructuring (hard rules below hold).
 4. Done vs remaining: what works, what's left. (open — this seeds progress pre-population)
-5. Strategy going forward: keep-current / vertical-slice / server-first / frontend-first / other.
+5. Strategy going forward: keep-current / strangler-fig (modernizing legacy piecewise behind a facade) / vertical-slice / server-first / frontend-first / other — full catalog + recommendation matrix in 01 §Q11 (ALIGN row recommends strangler-fig when modernization is the goal); presentation contextualized to the audit.
 6. Change anything about current process? (testing, conventions, CI) — default: nothing.
 7. Testing expectation going forward.
 8. Autonomy default: AUTO / GUIDED / MANUAL.
