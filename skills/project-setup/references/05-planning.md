@@ -23,7 +23,7 @@ Record answers → STATE.md (`worktrees`, `gitflow`, per-phase autonomy noted in
 Delegate: `superpowers:writing-plans` installed → invoke it; output to `docs/project/plans/phase-N-<name>.md`.
 
 Fallback format (same path):
-- Header: goal, exit criteria, spec refs (§), branch, worktree, autonomy.
+- Header: goal, exit criteria, spec refs (§), branch, worktree, autonomy, DoD per `maturity` (rule 2b).
 - File map: files created/modified.
 - Bite-sized tasks (2–10 min each): exact paths, exact commands, complete code (not "add validation"), TDD order (test → fail → implement → pass), 1 commit per task.
 - `strategy: integration-test-first` → per feature the plan MUST sequence: (a) API docs/contract task; (b) integration-tests task, committed `test: integration contract for <feature>`; (c) implementation task(s); (d) unit-tests task (if Q13 enabled); (e) verification task: integration suite green + `git diff <contract-commit>..HEAD -- <integration test paths>` shows zero assertion changes. Plan header records contract-commit placeholder for (e).
@@ -31,6 +31,10 @@ Fallback format (same path):
 Infra/deploy phase → STATE.md `make_workflow` != none → invoke `weloin:deploy-setup` (installed) passing recorded scope (A local-only / B deploy-only / C both) + local-infra answer so it skips re-asking; it scans real code at this point — that's why the build waits until here. Fallback (not installed): minimal Makefile + compose + single CI workflow honoring `make <env|surface> <action> [args]`, documented in plan. `make_workflow: none` → skip.
 
 `medium+`: reviewer subagent checks plan (task completeness, dependency order, spec conformance); fix; max 2 rounds. User approves plan (gate).
+
+## 3b. Hardening plan (`promote` subcommand only)
+
+Plan sourced from: open `docs/project/40-debt.md` rows + new-level requirements from rule 2b delta (prototype→mvp: migrations from first schema, `.env`, core-path tests; mvp→production: secrets manager, full tests, gates setup if newly selected, observability). Normal machinery applies: macro-plan ask, reviewer check (medium+), user gate. Each task resolving a DEBT row marks it `resolved (<ref>)` in the same commit.
 
 ## 4. Progress scaffold (first plan only; then per plan)
 
