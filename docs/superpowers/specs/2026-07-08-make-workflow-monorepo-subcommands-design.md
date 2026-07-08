@@ -76,6 +76,13 @@ Subcommand-mode rules:
 - Ask only what's missing; defaults = current STATE.md values.
 - All existing global rules hold (update-aware, same-commit STATE.md updates, user gates).
 - Unknown subcommand → print the table, take no action.
+- `help` subcommand → print the table + one line on no-args behavior; zero writes.
+- Arguments are `<subcommand> [free-text context]`: first word routes (tolerant match —
+  `deploy`/`deployment`, `gates`/`tests`); the rest is user context absorbed like interview
+  answers (adaptive-skip: whatever it answers is not re-asked). Example:
+  `/weloin:project-setup deploy use kubernetes, single node, ghcr images`.
+- README documents subcommands + opt-in features (gates, integration-test-first, make workflow,
+  repo structure).
 
 ## Independence
 
