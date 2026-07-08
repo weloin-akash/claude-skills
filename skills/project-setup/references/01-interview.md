@@ -40,16 +40,43 @@
     - **monorepo** — `apps/` + `packages/`; valid even for single app + shared libs.
     - **polyrepo** — recorded as note only; this setup covers the current repo.
     → STATE.md `repo_structure: single|monorepo|polyrepo`. Drives architecture layout (03), builder-per-boundary scoping to `apps/*` (04), plan paths (05).
-11. Development strategy — make choosing easy: every option carries a one-line "pick when", and the skill derives ONE recommendation from answers so far (API complexity, architecture, scale) and lists it first labeled "(Recommended)". AskUserQuestion caps at 4 options → show recommendation + 3 best fits; remaining reachable via Other.
-    - **vertical-slice** — pick when features ship as independent end-to-end slices (default for most apps).
-    - **integration-test-first** (contract-by-test) — pick for complex API / multi-service / medium+ scale. Order per feature: API docs → integration tests committed as contract → implement → unit tests (per Q13) → suite green UNMODIFIED. Tests conform code to concept, never reverse. RECOMMEND when project has complex API surface, multi-service architecture, or medium+ scale.
-    - **server-first** — pick when API must stabilize before UI.
-    - **frontend-first** — pick when UX drives the domain model.
-    - **contract-first** — pick when multiple teams/agents build against shared schemas.
-    - **infrastructure-first** — pick when platform/deploy risk dominates.
-    - **prototype-first** — pick when core feasibility unknown.
-    - **inside-out** — pick when the domain core is the hard part.
-    Record in STATE.md `strategy` + CLAUDE.md. `integration-test-first` chosen → also copy its rule block into CLAUDE.md (templates.md → CLAUDE.md, Development Strategy section).
+11. Development strategy — matrix-driven, context-aware. Presentation rules (never a flat menu):
+    (a) candidates = matrix recommendation + 3 nearest fits (runner-up + neighbors), listed first labeled "(Recommended)"; remainder via Other (AskUserQuestion 4-option cap);
+    (b) maturity re-rank — prototype boosts spike-and-stabilize / prototype-first into the shown set; production boosts integration-test-first / walking-skeleton;
+    (c) contextualized copy — rendered options use the PROJECT'S OWN nouns from answers so far ("eval-first — answer-quality gets a measurable bar before you add channels"); generic pick-when lines below live in this file only;
+    (d) recommendation justified in one line naming its signals ("multi-service + payments → integration-test-first").
+    Catalog (**name** — Order pipeline — pick when):
+    - **vertical-slice** — feature slice end-to-end → next slice — features ship independently (fallback default).
+    - **integration-test-first** (contract-by-test) — API docs → integration tests committed as contract → implement → unit tests (per Q13) → suite green UNMODIFIED; tests conform code to concept, never reverse — complex API / multi-service / medium+ scale.
+    - **server-first** — API + domain stable → UI — API must stabilize before UI.
+    - **frontend-first** — UI/UX flows → backend to fit — UX drives the domain model.
+    - **contract-first** — shared schemas/contracts → parallel implementation against them — multiple teams/agents on shared schemas.
+    - **infrastructure-first** — platform/deploy/CI → app code — platform/deploy risk dominates.
+    - **prototype-first** — quick prototype → validate → iterate or rebuild — core feasibility unknown.
+    - **inside-out** — domain core → adapters → surfaces — domain core is the hard part.
+    - **walking-skeleton** — thinnest end-to-end slice incl. CI/deploy → flesh out features — new platform / deployment risk; proves the whole pipe day one.
+    - **behavior-first** (BDD) — user scenarios as executable specs → implement until scenarios pass — non-technical stakeholders, acceptance-criteria-driven.
+    - **data-first** (schema-first) — data model + migrations → queries → API → UI — data-heavy, ETL, reporting, analytics.
+    - **event-first** — domain events + message contracts → consumers/producers → UI — event-driven, CQRS, async multi-service; event schemas = contract, integration-test-first immutability protocol applies (06).
+    - **eval-first** — eval harness + quality metrics → baseline → iterate until targets — ML/LLM/agent products; quality measured, not asserted.
+    - **strangler-fig** — facade over legacy → replace piecewise → retire legacy — ALIGN path only: modernizing an existing system.
+    - **spike-and-stabilize** — throwaway spike → learn → rebuild clean on contract — prototype maturity + high unknowns; spike shortcuts → debt ledger.
+
+    Recommendation matrix (signals: Rounds A+B, Q10/10b, `maturity`, ALIGN audit; most specific signal wins — ML beats CRUD, ALIGN beats all for existing code; nothing matches → vertical-slice):
+
+    | Project signals | Recommend | Runner-up |
+    |---|---|---|
+    | CRUD web app, small/medium | vertical-slice | walking-skeleton |
+    | Complex API / multi-service | integration-test-first | contract-first |
+    | Event-driven / async architecture | event-first | integration-test-first |
+    | ML/LLM/agent product | eval-first | prototype-first |
+    | Data pipeline / analytics | data-first | inside-out |
+    | UX-critical consumer app | frontend-first | behavior-first |
+    | Infra/platform product | walking-skeleton | infrastructure-first |
+    | Legacy modernization (ALIGN) | strangler-fig | integration-test-first |
+    | Feasibility unknown / prototype maturity | spike-and-stabilize | prototype-first |
+
+    Record in STATE.md `strategy` + CLAUDE.md. `integration-test-first` (or `event-first` — event schemas are the contract artifact) chosen → also copy the integration-test-first rule block into CLAUDE.md (templates.md → CLAUDE.md, Development Strategy section).
 12. Stack preferences, or "suggest" (recommend from requirements; justify in one line each).
 13. Testing: unit / unit+integration / full TDD / +e2e / suggest.
 
