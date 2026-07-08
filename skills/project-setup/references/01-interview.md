@@ -14,12 +14,17 @@
 - Long detailed answer → absorb everything it covers, prune later rounds.
 - Short answers fine; don't push for elaboration unless ambiguous.
 - After Round A, set `scale` in STATE.md — it prunes the remaining rounds per the SKILL.md rigor table.
+- After Round A, also set `maturity` (SKILL.md rule 2b) — **prototype**: skip Q13 (testing = smoke, noted), Q14 (gitflow = trunk, noted), Q15b (silently), Q16, Q17 (`make_workflow: none`), Q18, Round F; Q15 autonomy still asked (execution loop needs it). **mvp**: all asked; gates optional, no recommendation push; make_workflow default A. **production**: Q15b universals preselected as recommended; make_workflow leans C; Q18 becomes confirm (auto-include medium+).
 
 ### Round A — Identity & scale (always)
 1. What is this? 2–3 sentences: problem, solution. (open)
 2. Target user: technical / semi-technical / non-technical / mixed.
 3. Platform: web app / website / mobile / desktop / cross-platform / CLI / library / browser ext / other.
 4. Scale: personal-small / team-medium / large userbase. ← sets `scale`
+4b. Maturity — how production-ready from day one? ← sets `maturity`; prunes downstream (adaptive rules below)
+    - **prototype** — validate idea; throwaway OK; speed over rigor.
+    - **mvp** — ship minimal but extendable; boundaries enforced, shortcuts recorded in debt ledger.
+    - **production** — hardened from day one.
 5. Deployment target: local / VPS / K8s / serverless / stores / n-a.
 
 ### Round B — Functionality (always)
@@ -51,7 +56,7 @@
 ### Round D — Workflow (medium+; small: only 14, 15)
 14. Gitflow (feature branches + develop/main) or trunk-based? → STATE.md `gitflow`.
 15. Autonomy default: AUTO / GUIDED / MANUAL → STATE.md `autonomy_default`.
-15b. **Gated development** — only if Q15 = AUTO or GUIDED (MANUAL → skip silently; human already reviews all). Multi-select; derive 3–5 candidates from answers so far — the two universal gates always offered, conditional ones only when their trigger holds:
+15b. **Gated development** — only if Q15 = AUTO or GUIDED AND `maturity` ≠ prototype (MANUAL → skip silently, human already reviews all; prototype → skip silently, `gates` subcommand stays explicit opt-in). `maturity: production` → universal gates preselected as recommended. Multi-select; derive 3–5 candidates from answers so far — the two universal gates always offered, conditional ones only when their trigger holds:
     - `regression` (universal): full suite green + zero golden/assertion drift, per-task-group proof.
     - `goal-alignment` (universal): work verifiably serves brief/MVP/strategy; blocks scope drift.
     - `compare-results` (measurable baseline exists — perf numbers, eval scores, benchmarks): new result ≥ baseline or written justification.
@@ -83,7 +88,8 @@ Write per templates.md, detailed-compressed style:
 - `docs/project/00-brief.md` — what/who/why, scale, platform, constraints.
 - `docs/project/10-requirements.md` — features (prioritized), journeys, integrations, NFRs, MVP vs deferred.
 - `small` scale: merge both into `00-brief.md`.
-- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches`, `strategy`, `gates` (Q15b answer; `[]` if skipped/none).
+- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches`, `strategy`, `maturity` (Q4b), `gates` (Q15b answer; `[]` if skipped/none).
+- `maturity` prototype|mvp → create empty `docs/project/40-debt.md` (templates.md) + CLAUDE.md debt rule line.
 - Thin `CLAUDE.md` (templates.md) if absent.
 - Commit: `docs: discovery brief and requirements`.
 
