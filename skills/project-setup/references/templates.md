@@ -8,15 +8,19 @@ All docs: detailed-compressed style — dense bullets/tables, no filler, no mean
 # Project State
 phase: 1-discovery        # 0-init|1-discovery|2-architecture|3-agents|4-planning|5-execution
 autonomy_default: GUIDED  # AUTO|GUIDED|MANUAL
-strategy: TBD             # vertical-slice|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|custom
+strategy: TBD             # vertical-slice|integration-test-first|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|custom
 gitflow: TBD              # true|false|custom
 worktrees: TBD            # per-phase|per-feature|none
 scale: TBD                # small|medium|large
+gates: []                 # subset of [regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget]; [] = gating off
 next: run discovery interview
 updated: YYYY-MM-DD
 
 ## Notes
 - <session-relevant context that fits nowhere else; keep ≤10 lines>
+
+## Concerns   <!-- gated dev only; DONE_WITH_CONCERNS entries; batch-surfaced at next boundary/session end; clear when resolved -->
+- YYYY-MM-DD <gate> <task-group>: <one-line concern> → docs/project/gates/<task-group>-gate.md
 ```
 
 ## 00-brief.md
@@ -92,6 +96,10 @@ State: `docs/project/STATE.md` — read FIRST every session. Spec: `docs/project
 
 ## Development Strategy
 <strategy>: <one line what it means for build order>
+<!-- integration-test-first only — include these rules verbatim: -->
+- Per feature: API docs → integration tests committed as contract (`test: integration contract for <feature>`) → implement → unit tests (if enabled) → integration suite green UNMODIFIED.
+- Integration tests are IMMUTABLE during implementation — never edit to make pass.
+- Change protocol: functionality/structure change ⇒ update integration tests FIRST, commit, run suite; failure list = work list; fix until green.
 
 ## Rules
 - Doc style: detailed-compressed (dense, complete, no filler)
@@ -141,6 +149,24 @@ started: — completed: —
 ## Notes
 - <blockers, decisions, deviations>
 ```
+
+## Gate report → `docs/project/gates/<task-group>-gate.md` (gated dev only)
+
+```markdown
+# Gate Report — <task-group>
+base: <commit sha at group start>   date: YYYY-MM-DD   overall: PASS | DONE_WITH_CONCERNS | FAIL
+
+| Gate | Verdict | Evidence |
+|---|---|---|
+| regression | PASS | <N passed / 0 failed; assertion-drift diff summary> |
+| goal-alignment | PASS | <spec §refs served; scope-drift check result> |
+| <other selected gates> | … | <numbers/diffs — evidence, never bare verdicts> |
+
+## Concerns   <!-- only if any; mirror one-liner into STATE.md ## Concerns -->
+- <concern>: <why not blocking (pre-existing / out of scope)> → <follow-up owner or task>
+```
+
+Overall verdict = worst of per-gate verdicts (FAIL > DONE_WITH_CONCERNS > PASS). `strategy: integration-test-first` → regression gate row MUST include integration-test immutability proof: diff integration tests vs contract commit; any weakened/removed assertion by an implementation commit = FAIL.
 
 ## Agent file → `.claude/agents/<name>.md`
 
