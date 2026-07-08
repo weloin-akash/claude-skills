@@ -22,11 +22,26 @@ Run: `cat docs/project/STATE.md 2>/dev/null; ls -a; git status 2>/dev/null | hea
 
 Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writes `2-architecture` directly on completion), `2-architecture`→03, `3-agents`→04, `4-planning`→05, `5-execution`→06. All file/doc skeletons live in `references/templates.md` — load it whenever a phase creates files. "Load ONE reference" = one per phase; a phase transition legitimately loads the next routed file. Never pre-read others.
 
+## Subcommands (ARGUMENTS routing — checked BEFORE state detection)
+
+Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text context]`) → focused flow, not the phase machine. First word routes (tolerant match: `deploy`/`deployment`, `gates`/`tests`, plural/singular); the remainder is user context — absorb it like interview answers (adaptive-skip: whatever it answers, don't re-ask; e.g. `deploy use kubernetes, single node, ghcr images` pre-answers deploy-setup questions). Read STATE.md first; missing → say so, offer full INIT/ALIGN, never fabricate state (`status` just reports "no project state"). Ask only what's still missing (defaults = STATE.md values); all Global Rules hold (update-aware, same-commit STATE.md updates, user gates). Unknown subcommand → print this table, take no action.
+
+| Subcommand | Loads | Action |
+|---|---|---|
+| `deploy` | 05 | `make_workflow` unset → ask scope A/B/C + local infra; invoke `weloin:deploy-setup` with scope (fallback per 05); record |
+| `gates` (alias `tests`) | 01 §Q15b + 04 + 06 | Show current `gates`; re-derive candidates, multi-select; update STATE.md; medium+ → create/update gatekeeper agents (04 §2); offer immediate gate run on current diff → gate report. Explicit invocation = opt-in — Q15b's AUTO/GUIDED condition does NOT apply here |
+| `autonomy` | — (rule 4) | Show `autonomy_default` + per-phase override; ask new; update STATE.md (+ progress header if mid-phase) |
+| `strategy` | 01 §Q11 | Re-ask with recommendation; update STATE.md + CLAUDE.md; `integration-test-first` → copy rule block (templates) |
+| `agents` | 04 | Update-aware roster review (04 §2) |
+| `plan` | 05 | Plan next phase now (macro-plan ask included) |
+| `status` | — | STATE.md + progress + `git log --oneline -5` → compressed report; zero writes |
+| `help` | — | Print this table + one line: no args = full phase machine (INIT/ALIGN/RESUME); zero writes |
+
 **AskUserQuestion unavailable** (any phase): ask the same batch as numbered plain-text questions in one message; same adaptive-skip rules apply.
 
 ## SSOT: docs/project/
 
-`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
+`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `repo_structure` (single|monorepo|polyrepo), `make_workflow` (none|A|B|C), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
 
 ## Global Rules (apply in every phase)
 
