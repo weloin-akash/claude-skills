@@ -8,7 +8,7 @@ Skills live in this repo under `skills/`. The `weloin-skills` CLI installs them 
 
 | Skill | What it does |
 |---|---|
-| `weloin:project-setup` | Phase-machine for agent-driven development: interviews you, writes brief/requirements/architecture/ADRs, creates a custom agent roster with model tags, breaks work into phased plans, executes with AUTO/GUIDED/MANUAL autonomy, and keeps everything resumable via a `docs/project/STATE.md` SSOT. Works on fresh dirs and aligns existing codebases. |
+| `weloin:project-setup` | Phase-machine for agent-driven development: interviews you, writes brief/requirements/architecture/ADRs, creates a custom agent roster with model tags, breaks work into phased plans, executes with AUTO/GUIDED/MANUAL autonomy, and keeps everything resumable via a `docs/project/STATE.md` SSOT. Maturity axis (prototype/mvp/production) sets the quality bar independent of scale — prototypes skip ceremony but log shortcuts to a debt ledger; `promote` upgrades later. Works on fresh dirs and aligns existing codebases. |
 
 Run `weloin-skills list` for the live catalog with install states.
 
@@ -73,6 +73,7 @@ Focused entry points — skip the phase machine, do one thing. Anything after th
 | `/weloin:project-setup gates` (or `tests`) | Configure/adjust quality gates; create gatekeeper agents (medium+); optionally run gates on current diff |
 | `/weloin:project-setup autonomy` | Change AUTO/GUIDED/MANUAL default or per-phase override |
 | `/weloin:project-setup strategy` | Re-choose development strategy (incl. `integration-test-first` contract-by-test) |
+| `/weloin:project-setup promote` (or `maturity`) | Upgrade project maturity one level (prototype→mvp→production): re-asks skipped questions, builds hardening plan from the debt ledger |
 | `/weloin:project-setup agents` | Review/update agent roster |
 | `/weloin:project-setup plan` | Plan the next phase now |
 | `/weloin:project-setup status` | Compressed project state report (read-only) |
