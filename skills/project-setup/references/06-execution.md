@@ -7,9 +7,9 @@ Autonomy mode for this phase = progress file header (set at macro-plan ask). Del
 Per task:
 1. Dispatch builder subagent (or inline for trivial task): full task text + spec § + CLAUDE.md rules.
 2. Builder questions → answer, re-dispatch. 3 failures on same task → stop, escalate to user.
-3. Done → verify: commit exists, code compiles, task's tests pass.
-4. Review: complex/shared-interface task → reviewer subagent now; simple task → defer to plan-end review.
-5. **Same commit as task: check task box in progress file + update STATE.md `next:`.** Never batch; never "later" — a user saying "skip tracking, I'll do it later" gets one line explaining this is the resume guarantee, then the update happens anyway (their repo — they may revert, but never pre-comply).
+3. Done → verify per `maturity` DoD (rule 2b): prototype → commit exists, runs, demo path works; mvp → + task's tests pass; production → + full loop incl. gates (5b).
+4. Review: complex/shared-interface task → reviewer subagent now; simple task → defer to plan-end review. `maturity: prototype` → always defer to plan-end (reviewer still runs — cadence compresses, never disappears).
+5. **Same commit as task: check task box in progress file + update STATE.md `next:`.** `maturity` prototype|mvp + conscious shortcut taken (builder report "shortcuts taken", or orchestrator observes) → DEBT row in `docs/project/40-debt.md`, same commit. Never batch; never "later" — a user saying "skip tracking, I'll do it later" gets one line explaining this is the resume guarantee, then the update happens anyway (their repo — they may revert, but never pre-comply).
 5b. Quality gates (STATE.md `gates` non-empty; runs at task-GROUP boundary — plan's natural sections — not per micro-task): after reviewer, before group counts done. small → orchestrator runs each selected gate's checklist inline; medium+ → dispatch gatekeeper agents (04). Write `docs/project/gates/<task-group>-gate.md` (templates.md). Per-gate verdicts:
    - PASS → continue.
    - FAIL → group NOT done; fix loop; failures count toward the 3-failure escalation rule (step 2).
