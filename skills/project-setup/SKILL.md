@@ -26,7 +26,7 @@ Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writ
 
 ## SSOT: docs/project/
 
-`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
+`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `worktrees`, `scale` (small|medium|large), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
 
 ## Global Rules (apply in every phase)
 
@@ -39,6 +39,7 @@ Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writ
    | Docs | brief+requirements merged; ADRs inline | full tree | full tree + NFR + deployment doc |
    | Agents | builder + reviewer | 3–5 roster | full roster + security + devops |
    | Review gates | reviewer per phase | per plan | per plan + cross-agent conformance |
+   | Quality gates (if `gates` opted, Q15b) | orchestrator inline checklist | gatekeeper agents | gatekeeper agents |
 
 3. **Hybrid delegation.** Before doing a job inline, check if the listed skill is installed (appears in available-skills). Installed → invoke it. Missing → use the built-in fallback in the reference file. Never duplicate a delegated skill's logic.
 
