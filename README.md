@@ -63,6 +63,28 @@ weloin-skills list
 
 Then in any Claude Code session: `/weloin:project-setup` (or just say "set up a new project").
 
+### project-setup subcommands
+
+Focused entry points — skip the phase machine, do one thing. Anything after the subcommand is free-text context the skill absorbs (e.g. `/weloin:project-setup deploy use kubernetes, single node, ghcr images` — those answers won't be re-asked):
+
+| Command | Does |
+|---|---|
+| `/weloin:project-setup deploy` | Make-based local/deploy workflow only (scope A local-only / B deploy-only / C both) via `weloin:deploy-setup` |
+| `/weloin:project-setup gates` (or `tests`) | Configure/adjust quality gates; create gatekeeper agents (medium+); optionally run gates on current diff |
+| `/weloin:project-setup autonomy` | Change AUTO/GUIDED/MANUAL default or per-phase override |
+| `/weloin:project-setup strategy` | Re-choose development strategy (incl. `integration-test-first` contract-by-test) |
+| `/weloin:project-setup agents` | Review/update agent roster |
+| `/weloin:project-setup plan` | Plan the next phase now |
+| `/weloin:project-setup status` | Compressed project state report (read-only) |
+| `/weloin:project-setup help` | This table |
+
+Notable opt-in features (asked during the interview, all recorded in `docs/project/STATE.md`):
+
+- **Gated development** — quality gates (regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget) that work must pass before it counts as done; verdicts PASS / DONE_WITH_CONCERNS / FAIL with evidence reports under `docs/project/gates/`. Small projects: inline checklist; medium+: dedicated read-only gatekeeper agents.
+- **integration-test-first strategy** — integration tests written first and committed as an immutable contract; implementation must make them pass unmodified; changes update tests first so breakage enumerates every dependent.
+- **Make workflow** — canonical `make <env|surface> <action> [args]` interface (`make local up`, `make staging deploy`, `make local nuke`), built at the infra phase by `weloin:deploy-setup`.
+- **Repo structure** — explicit single-app / monorepo (`apps/` + `packages/`) / polyrepo choice driving layout and agent scoping.
+
 ## Update skills
 
 - **Symlinked (default):** `git pull` in this repo — done. Nothing to re-run.
