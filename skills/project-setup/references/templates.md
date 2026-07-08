@@ -12,6 +12,8 @@ strategy: TBD             # vertical-slice|integration-test-first|server-first|f
 gitflow: TBD              # true|false|custom
 worktrees: TBD            # per-phase|per-feature|none
 scale: TBD                # small|medium|large
+repo_structure: TBD       # single|monorepo|polyrepo
+make_workflow: TBD        # none|A(local-only)|B(deploy-only)|C(both) — built at infra phase via weloin:deploy-setup
 gates: []                 # subset of [regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget]; [] = gating off
 next: run discovery interview
 updated: YYYY-MM-DD
@@ -100,6 +102,9 @@ State: `docs/project/STATE.md` — read FIRST every session. Spec: `docs/project
 - Per feature: API docs → integration tests committed as contract (`test: integration contract for <feature>`) → implement → unit tests (if enabled) → integration suite green UNMODIFIED.
 - Integration tests are IMMUTABLE during implementation — never edit to make pass.
 - Change protocol: functionality/structure change ⇒ update integration tests FIRST, commit, run suite; failure list = work list; fix until green.
+
+## Commands   <!-- make_workflow != none only -->
+Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (bootstrap stack), `make local nuke` (fresh start), `make <env> deploy`, `make setup`. Full surface: `make help`. Env/lifecycle ops go through make targets — never raw docker/kubectl/helm when a target exists.
 
 ## Rules
 - Doc style: detailed-compressed (dense, complete, no filler)
