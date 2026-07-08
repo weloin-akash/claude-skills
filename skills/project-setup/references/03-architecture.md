@@ -6,7 +6,7 @@ Present 2–3 architecture approaches, compressed: one table (approach / stack /
 
 ## 2. Design sections
 
-Present design compressed, section by section, ONE approval check per message-group (not per paragraph). Sections — include only what applies, scaled by `scale`:
+Present design compressed, section by section, ONE approval check per message-group (not per paragraph). Sections — include only what applies, scaled by `scale` + `maturity` (rule 2b): prototype → skip Security, Risks, NFR; mvp → boundaries mandatory (isolation test below = hard gate); production → all + observability:
 - System overview + boundaries (modules/services, one responsibility each, interfaces between)
 - Data model (entities, keys, relations; schema sketch)
 - API / interface design (contracts, auth, versioning if large)
@@ -18,6 +18,8 @@ Present design compressed, section by section, ONE approval check per message-gr
 - `large` only: NFR budget (latency/throughput/SLO), observability, deployment topology
 
 **Design-for-isolation test per unit:** can you state what it does, how it's used, what it depends on — without reading internals? No → redraw boundary.
+
+**Debt-aware design (prototype/mvp):** consciously deferred concerns surfaced during design (auth stub, no rate limiting, drop-and-recreate DB) → name them in the design; each becomes a `40-debt.md` row when built (06).
 
 **UI:** if project has UI and user gave references, capture direction here (reference → what to take from it). No references yet → block UI-related sections until provided.
 
