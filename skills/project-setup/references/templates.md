@@ -12,6 +12,7 @@ strategy: TBD             # vertical-slice|integration-test-first|server-first|f
 gitflow: TBD              # true|false|custom
 worktrees: TBD            # per-phase|per-feature|none
 scale: TBD                # small|medium|large
+maturity: TBD             # prototype|mvp|production — quality bar, overrides per SKILL.md rule 2b
 repo_structure: TBD       # single|monorepo|polyrepo
 make_workflow: TBD        # none|A(local-only)|B(deploy-only)|C(both) — built at infra phase via weloin:deploy-setup
 gates: []                 # subset of [regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget]; [] = gating off
@@ -87,6 +88,17 @@ updated: YYYY-MM-DD
 | 1 | <choice> | <why → what it costs/buys> | YYYY-MM-DD |
 ```
 
+## 40-debt.md (maturity: prototype|mvp only) → `docs/project/40-debt.md`
+
+```markdown
+# Debt Ledger
+| # | Shortcut taken | Production needs | Date | Status |
+|---|---|---|---|---|
+| 1 | <conscious shortcut, e.g. auth stubbed> | <what hardening requires> | YYYY-MM-DD | open |
+```
+
+Every conscious shortcut = row, same commit as the work. Rows never deleted; resolved → `resolved (<commit/plan ref>)`. `promote` sources its hardening plan from open rows.
+
 ## CLAUDE.md (thin; MERGE if exists — never overwrite)
 
 ```markdown
@@ -110,6 +122,7 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 - Doc style: detailed-compressed (dense, complete, no filler)
 - <testing requirement>
 - Task done ⇒ progress + STATE.md updated in same commit
+- Conscious shortcut ⇒ row in `docs/project/40-debt.md`, same commit   <!-- maturity: prototype|mvp only -->
 - Agent conflicts (scope/conventions/interfaces) → escalate to user, never silent
 - Builders report shared-interface changes in task output
 
@@ -195,7 +208,7 @@ You are the <role> for <project>.
 - <stack standards, testing requirement, doc style: detailed-compressed>
 
 ## Reporting
-- What built/changed, tests run+results, **shared interfaces touched** (APIs/types/schemas), deviations.
+- What built/changed, tests run+results, **shared interfaces touched** (APIs/types/schemas), shortcuts taken (debt candidates; prototype/mvp), deviations.
 ```
 
 ## .gitignore (init path)
