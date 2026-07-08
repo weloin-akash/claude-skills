@@ -72,7 +72,7 @@ Focused entry points — skip the phase machine, do one thing. Anything after th
 | `/weloin:project-setup deploy` | Make-based local/deploy workflow only (scope A local-only / B deploy-only / C both) via `weloin:deploy-setup` |
 | `/weloin:project-setup gates` (or `tests`) | Configure/adjust quality gates; create gatekeeper agents (medium+); optionally run gates on current diff |
 | `/weloin:project-setup autonomy` | Change AUTO/GUIDED/MANUAL default or per-phase override |
-| `/weloin:project-setup strategy` | Re-choose development strategy (incl. `integration-test-first` contract-by-test) |
+| `/weloin:project-setup strategy` | Re-choose development strategy — 15-strategy catalog (incl. `integration-test-first`, `eval-first`, `strangler-fig`) with a project-kind recommendation matrix, presented in your project's own terms |
 | `/weloin:project-setup promote` (or `maturity`) | Upgrade project maturity one level (prototype→mvp→production): re-asks skipped questions, builds hardening plan from the debt ledger |
 | `/weloin:project-setup agents` | Review/update agent roster |
 | `/weloin:project-setup plan` | Plan the next phase now |
