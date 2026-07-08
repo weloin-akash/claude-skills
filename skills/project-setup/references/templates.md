@@ -8,7 +8,7 @@ All docs: detailed-compressed style — dense bullets/tables, no filler, no mean
 # Project State
 phase: 1-discovery        # 0-init|1-discovery|2-architecture|3-agents|4-planning|5-execution
 autonomy_default: GUIDED  # AUTO|GUIDED|MANUAL
-strategy: TBD             # vertical-slice|integration-test-first|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|custom
+strategy: TBD             # vertical-slice|integration-test-first|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|walking-skeleton|behavior-first|data-first|event-first|eval-first|strangler-fig|spike-and-stabilize|custom
 gitflow: TBD              # true|false|custom
 worktrees: TBD            # per-phase|per-feature|none
 scale: TBD                # small|medium|large
