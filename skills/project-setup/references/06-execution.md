@@ -25,6 +25,15 @@ Per task:
 - Functionality/structure change requested → update integration tests FIRST, commit, run suite; resulting failure list = work list; fix until green. Only this protocol may touch integration tests.
 - Gating on → regression gate proves immutability (diff vs contract commit; weakened assertion = FAIL). Gating off → orchestrator enforces same check at plan completion; violation = blocker, escalate.
 
+## Strategy rules: eval-first / strangler-fig / spike-and-stabilize / event-first
+
+| Strategy | Execution rule |
+|---|---|
+| eval-first | baseline recorded at harness commit; new results ≥ baseline or written justification — `compare-results` gate when gating on, orchestrator check at plan completion when off |
+| strangler-fig | facade contract tests immutable (integration-test-first protocol); legacy code touched only to delete behind the facade |
+| spike-and-stabilize | spike branch never merges; rebuild tasks cite spike learnings; every spike shortcut carried into rebuild → `40-debt.md` row |
+| event-first | integration-test-first protocol with event schemas as the contract artifact |
+
 ## Plan completion
 
 1. Full test suite; record results table in progress file.
