@@ -6,9 +6,21 @@ Skills live in this repo under `skills/`. The `weloin-skills` CLI installs them 
 
 ## Skills in this library
 
-| Skill | What it does |
-|---|---|
-| `weloin:project-setup` | Phase-machine for agent-driven development: interviews you, writes brief/requirements/architecture/ADRs, creates a custom agent roster with model tags, breaks work into phased plans, executes with AUTO/GUIDED/MANUAL autonomy, and keeps everything resumable via a `docs/project/STATE.md` SSOT. Maturity axis (prototype/mvp/production) sets the quality bar independent of scale — prototypes skip ceremony but log shortcuts to a debt ledger; `promote` upgrades later. Works on fresh dirs and aligns existing codebases. |
+### `weloin:project-setup`
+
+A phase-machine for agent-driven development. Instead of ad-hoc prompting, it runs your project through structured phases — from first interview to shipped code — with every decision recorded and resumable.
+
+- **What it does**
+  - Interviews you about the project, then writes the brief, requirements, architecture, and ADRs.
+  - Creates a custom agent roster with model tags matched to each role.
+  - Breaks work into phased plans and executes them with your choice of AUTO / GUIDED / MANUAL autonomy.
+  - Keeps everything in a `docs/project/STATE.md` single source of truth, so any future session picks up exactly where the last one stopped.
+  - Works on fresh directories and can align an existing codebase to the same structure.
+- **Why it's useful**
+  - Agent sessions lose context; this skill makes project state durable. You can close a session mid-phase and resume days later without re-explaining anything.
+  - The maturity axis (prototype → mvp → production) sets the quality bar independent of project scale: prototypes skip ceremony but log every shortcut to a debt ledger, and `promote` later upgrades the project by re-asking skipped questions and building a hardening plan from that ledger.
+  - Opt-in quality gates (regression, goal-alignment, security-privacy, perf-budget, …) mean work isn't "done" until it passes review with evidence — not just when the agent says so.
+  - A 15-strategy development catalog (integration-test-first, eval-first, strangler-fig, …) with a project-kind recommendation matrix picks an approach that fits your project instead of one-size-fits-all.
 
 Run `weloin-skills list` for the live catalog with install states.
 
