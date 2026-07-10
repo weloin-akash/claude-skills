@@ -14,8 +14,9 @@ Detect, in parallel where possible:
 7. Tests: dirs, configs, script commands; run count if cheap.
 8. Docs: `docs/`, wikis, existing specs.
 9. Maturity signals: tests present+passing? CI configured? DB migrations dir? secrets handling (`.env` committed? hardcoded keys?)? error-handling depth (spot-check).
+10. Deploy envs (feeds `scale` subcommand + `make_workflow`): Helm charts, K8s manifests, `deploy.sh`, CI deploy jobs, per-env config (`.env.staging`/`.env.production`, `values-*.yaml`) → classify local / staging / production as present | partial | absent.
 
-Present compressed audit table: stack / architecture / commit style / branches / CI / tests / docs → one line each.
+Present compressed audit table: stack / architecture / commit style / branches / CI / tests / docs / deploy envs (local·staging·prod) → one line each.
 
 ## 2. Shortened interview
 

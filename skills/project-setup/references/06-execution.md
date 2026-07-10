@@ -2,6 +2,15 @@
 
 Autonomy mode for this phase = progress file header (set at macro-plan ask). Delegate discipline: `superpowers:subagent-driven-development` (subagent-per-task) or `superpowers:executing-plans` if installed; the loop below is the contract either way.
 
+## Isolation per substantial change (STATE.md `worktrees` policy)
+
+Trigger: a substantial change begins — new phase/feature/fix or a user request touching many files / core surfaces (trivial one-liners exempt). Resolve isolation from policy, don't re-ask what it decides:
+- `per-feature` → auto-create worktree for this change (delegate `superpowers:using-git-worktrees`, else `git worktree add ../<proj>-<slug> <branch>`).
+- `ask` (depends) → one AskUserQuestion: **current branch** / **new branch** (`feat/<slug>`) / **worktree** (`feat/<slug>` in `../<proj>-<slug>`). Record choice in progress file header.
+- `per-phase` → already resolved at macro-plan; no per-change ask.
+- `none` → current checkout.
+Worktree used → clean up after merge (06 §merge).
+
 ## Task loop (all modes)
 
 Per task:

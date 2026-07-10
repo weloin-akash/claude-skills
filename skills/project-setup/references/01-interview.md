@@ -82,6 +82,11 @@
 
 ### Round D — Workflow (medium+; small: only 14, 15)
 14. Gitflow (feature branches + develop/main) or trunk-based? → STATE.md `gitflow`.
+14b. **Worktree policy** — how isolation is applied across the project. → STATE.md `worktrees`. `maturity: prototype` → default `none`, skip.
+    - `per-phase` — each large phase gets its own worktree (auto at macro-plan; no per-change ask).
+    - `per-feature` — each feature/fix isolated in a worktree (auto at execution start).
+    - `ask` (depends) — decide per substantial change; execution prompts each time (current branch / new branch / worktree). RECOMMEND when isolation need varies by change size.
+    - `none` — always current checkout.
 15. Autonomy default: AUTO / GUIDED / MANUAL → STATE.md `autonomy_default`.
 15b. **Gated development** — only if Q15 = AUTO or GUIDED AND `maturity` ≠ prototype (MANUAL → skip silently, human already reviews all; prototype → skip silently, `gates` subcommand stays explicit opt-in). `maturity: production` → universal gates preselected as recommended. Multi-select; derive 3–5 candidates from answers so far — the two universal gates always offered, conditional ones only when their trigger holds:
     - `regression` (universal): full suite green + zero golden/assertion drift, per-task-group proof.
@@ -91,7 +96,12 @@
     - `security-privacy` (compliance answered or sensitive data): threat-model conformance, data-handling checks.
     - `perf-budget` (NFR targets or stated perf constraint): budget benches on touched paths.
     → STATE.md `gates: [...]`. Empty selection → gating off, zero downstream footprint. Enforcement is scale-dependent (see 04/06): small → orchestrator inline checklist; medium+ → read-only gatekeeper agents.
-16. CI/CD preference; commit style (conventional/free); lint/format tools.
+16. CI/CD preference; lint/format tools.
+16b. **Commit strategy** — batched sub-choices (one `AskUserQuestion`, 3 single-selects); defaults recommended per row. `maturity: prototype` → skip, default `conventional/body-when-why/none` noted.
+    - **style** (format grammar): `conventional` (`type(scope): subject`, machine-parseable, drives changelog/semver — RECOMMEND) / `gitmoji` (emoji prefix + summary) / `free` (imperative subject, no grammar) / `custom` (user pattern).
+    - **detail** (granularity + body depth): `body-when-why` (atomic; subject always, body only when rationale non-obvious — RECOMMEND) / `always-detailed` (subject + body every commit) / `minimal` (terse subject, atomic, no body) / `squash-per-task` (one rich commit per task/feature).
+    - **signature** (AI attribution): `none` (no `Co-Authored-By`/"Generated with" trailer — RECOMMEND, honors project CLAUDE.md rule 10) / `co-author` (append `Co-Authored-By: Claude ...`) / `custom` (user trailer).
+    → STATE.md `commit_strategy: <style>/<detail>/<signature>` (e.g. `conventional/body-when-why/none`). Written into CLAUDE.md `## Git`. Re-ask anytime via `commits` subcommand. Overrides never fabricated — `signature` defers to project/global CLAUDE.md when stricter.
 17. Local + deployed workflow — Make-based canonical interface wanted? Convention: `make <env|surface> <action> [args]` (`make local up`, `make local nuke`, `make staging deploy`, `make app run ios`, `make setup`). Scope (mirrors `weloin:deploy-setup`): **A** local-only (Makefile + compose + scripts) / **B** deploy-only (Helm + CI + deploy.sh) / **C** both / **none**. Sub-choice: local infra = docker compose / native / devcontainers / suggest.
     → STATE.md `make_workflow: none|A|B|C` + local-infra note. CLAUDE.md gains `## Commands` section (templates.md); rule: env/lifecycle ops via make targets — docs never instruct raw docker/kubectl/helm when a target exists. Built at infra/deploy phase via `weloin:deploy-setup` (05) — asked now, never built now.
 18. Security auditing agent wanted? (report-only scanner; categories scoped to stack) — medium+ only, auto-include for large.

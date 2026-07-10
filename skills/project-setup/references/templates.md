@@ -10,7 +10,8 @@ phase: 1-discovery        # 0-init|1-discovery|2-architecture|3-agents|4-plannin
 autonomy_default: GUIDED  # AUTO|GUIDED|MANUAL
 strategy: TBD             # vertical-slice|integration-test-first|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|walking-skeleton|behavior-first|data-first|event-first|eval-first|strangler-fig|spike-and-stabilize|custom
 gitflow: TBD              # true|false|custom
-worktrees: TBD            # per-phase|per-feature|none
+commit_strategy: TBD      # <style>/<detail>/<signature> — style: conventional|gitmoji|free|custom; detail: body-when-why|always-detailed|minimal|squash-per-task; signature: none|co-author|custom
+worktrees: TBD            # per-phase|per-feature|ask|none — ask = prompt (current branch/new branch/worktree) at each substantial change
 scale: TBD                # small|medium|large
 maturity: TBD             # prototype|mvp|production — quality bar, overrides per SKILL.md rule 2b
 repo_structure: TBD       # single|monorepo|polyrepo
@@ -130,8 +131,9 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 Default: <orchestrator or n/a>. Roster: <name — scope> per line.
 
 ## Git
-- Branches: <pattern> | Commits: <style>
-- AI attribution in commits: <none | per user choice>
+- Branches: <pattern> | Commits: <style> (`commit_strategy` style)
+- Detailing: <detail> — <one-line what it means for body/granularity>
+- AI attribution in commits: <none | co-author | custom> (`commit_strategy` signature; defers to stricter global/project rule)
 ```
 
 ## progress/README.md
