@@ -21,6 +21,8 @@ A phase-machine for agent-driven development. Instead of ad-hoc prompting, it ru
   - The maturity axis (prototype → mvp → production) sets the quality bar independent of project scale: prototypes skip ceremony but log every shortcut to a debt ledger, and `promote` later upgrades the project by re-asking skipped questions and building a hardening plan from that ledger.
   - Opt-in quality gates (regression, goal-alignment, security-privacy, perf-budget, …) mean work isn't "done" until it passes review with evidence — not just when the agent says so.
   - A 15-strategy development catalog (integration-test-first, eval-first, strangler-fig, …) with a project-kind recommendation matrix picks an approach that fits your project instead of one-size-fits-all.
+  - Git workflow is configurable and honored, not assumed: a commit strategy (style · detail · AI-signature) and a worktree isolation policy (per-phase / per-feature / ask / none) set once, then applied automatically — `ask` prompts current-branch / new-branch / worktree at each substantial change.
+  - A set-up project is never frozen: every config field (scale, strategy, commits, worktrees, gitflow, repo, gates, autonomy, maturity, deploy) has a subcommand to re-set it later — changes apply going forward, never restructuring existing work. `scale` scans your architecture and deploy envs, then proposes concrete steps to reach a target scale.
 
 Run `weloin-skills list` for the live catalog with install states.
 
@@ -85,6 +87,11 @@ Focused entry points — skip the phase machine, do one thing. Anything after th
 | `/weloin:project-setup gates` (or `tests`) | Configure/adjust quality gates; create gatekeeper agents (medium+); optionally run gates on current diff |
 | `/weloin:project-setup autonomy` | Change AUTO/GUIDED/MANUAL default or per-phase override |
 | `/weloin:project-setup strategy` | Re-choose development strategy — 15-strategy catalog (incl. `integration-test-first`, `eval-first`, `strangler-fig`) with a project-kind recommendation matrix, presented in your project's own terms |
+| `/weloin:project-setup commits` | Set commit strategy: style (conventional/gitmoji/free/custom) · detail (body-when-why/always-detailed/minimal/squash-per-task) · AI-signature (none/co-author/custom) |
+| `/weloin:project-setup worktrees` | Set worktree isolation policy: per-phase / per-feature / ask (decide per change) / none |
+| `/weloin:project-setup gitflow` (or `branching`) | Switch branch model: gitflow / trunk / custom |
+| `/weloin:project-setup scale` | Scan-first: audit architecture + deploy envs (local/staging/prod), pick a target scale, get gap-closing suggestions |
+| `/weloin:project-setup repo` (or `structure`) | Re-set repo structure: single / monorepo / polyrepo (migration is opt-in) |
 | `/weloin:project-setup promote` (or `maturity`) | Upgrade project maturity one level (prototype→mvp→production): re-asks skipped questions, builds hardening plan from the debt ledger |
 | `/weloin:project-setup agents` | Review/update agent roster |
 | `/weloin:project-setup plan` | Plan the next phase now |
