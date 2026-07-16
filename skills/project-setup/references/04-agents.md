@@ -10,6 +10,8 @@ Scale-driven baseline:
 | medium | orchestrator, 1 builder per boundary (max 3), tester, reviewer |
 | large | orchestrator, builders per boundary, tester, reviewer, security (report-only), devops |
 
+Orchestrator row conditional on STATE.md `orchestration` (01 §Q15c): created only when `agent/*`. `session` → roster minus orchestrator — the main session performs the orchestrator role (§4 must-haves bind to session behavior). Field absent (pre-field project) → ask Q15c now, record in STATE.md before deriving the roster — never derive silently from the existing roster.
+
 Gated dev (STATE.md `gates` non-empty): `small` adds NO agents — orchestrator runs the gate checklist inline (06). `medium`/`large` add one read-only **gatekeeper** agent per selected gate (`.claude/agents/<gate>-gate.md`, e.g. `regression-gate`); builders-vs-gatekeepers split — builders never grade own homework.
 
 Builder split rule: 1 per tech boundary (frontend/backend/service-per-language); same-language monorepo → split by domain, max 2.
@@ -68,7 +70,7 @@ Memory: native `memory: project` frontmatter — no manual MEMORY.md seeding. Me
 ## 5. CLAUDE.md + settings
 
 - Create/merge thin `CLAUDE.md` per templates.md (index → SSOT, strategy, agent workflow, alignment rules, git rules).
-- `.claude/settings.json` default-agent (`{"agent": "orchestrator"}`): ASK first — side effect on every session; only write if user says yes.
+- `.claude/settings.json` default-agent (`{"agent": "orchestrator"}`): ONLY when `orchestration: agent/default-agent` — ASK first (side effect on every session), write only on yes. Other modes → never offer; file already sets `"agent": "orchestrator"` while mode ≠ default-agent → ask to remove (rule 6 — never silent).
 
 ## 6. Transition
 
