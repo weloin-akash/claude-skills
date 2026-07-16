@@ -82,3 +82,10 @@ Rejected alternatives: two separate fields (`orchestration` + routing — more S
 - Cross-orchestrator shared-interface locking (escalation rule covers it).
 - Changing subagent tool tables, gate definitions, strategy catalog.
 - `cmux`/team-skill integration (separate skills own that).
+
+## Errata (post-review, 2026-07-16)
+
+- §5 dispatch payload: parallel orchestrators' dispatch text must explicitly include the single-writer override (supersedes CLAUDE.md same-commit STATE.md rule for that dispatch) — payload list alone let CLAUDE.md rules reintroduce STATE.md writes.
+- Small scale + `agent/*` (via subcommand): orchestrator agent gets added to the small roster; 01's "never exists at small" softened to "not by default".
+- SKILL.md rule 7 gains explicit carve-out pointer to 06 §Dispatch.
+- Parallel dispatch requires per-workstream phase plans + progress files written before dispatching.

@@ -11,7 +11,7 @@ Who runs the task loop:
 
 **Parallel dispatch** (2+ orchestrators concurrent; offered at macro-plan, 05 §2):
 - Worktree per orchestrator MANDATORY — overrides `worktrees: none` for this dispatch only (policy value untouched). Each orchestrator: own branch, own worktree, own progress file.
-- STATE.md single-writer: parallel orchestrators update ONLY their own progress file; STATE.md owned by the session — `next:` lists active workstreams; session reconciles at fan-in. Amends rule 7 for the parallel case only; all other modes keep same-commit STATE.md updates.
+- STATE.md single-writer: parallel orchestrators update ONLY their own progress file; STATE.md owned by the session — `next:` lists active workstreams; session reconciles at fan-in. Amends rule 7 for the parallel case only; all other modes keep same-commit STATE.md updates. Dispatch text for each parallel orchestrator states this override explicitly — it supersedes CLAUDE.md's same-commit STATE.md rule for the dispatch.
 - Fan-in: session merges per gitflow answer, cleans worktrees (§Plan completion merge rule), updates STATE.md + progress README in one commit.
 - Escalation: 3-failure rule (task loop step 2) escalates orchestrator→session→user; cross-workstream conflicts (scope/conventions/shared interfaces) → session→user, never resolved silently (04 §4).
 

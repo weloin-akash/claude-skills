@@ -96,7 +96,7 @@
     - `security-privacy` (compliance answered or sensitive data): threat-model conformance, data-handling checks.
     - `perf-budget` (NFR targets or stated perf constraint): budget benches on touched paths.
     → STATE.md `gates: [...]`. Empty selection → gating off, zero downstream footprint. Enforcement is scale-dependent (see 04/06): small → orchestrator inline checklist; medium+ → read-only gatekeeper agents.
-15c. **Orchestration mode** — who runs the execution task loop (06 §Dispatch). → STATE.md `orchestration`. `scale: small` → skip silently, default `session` (orchestrator agent never exists at small). `maturity: prototype` → skip silently, default `session` noted. Option copy contextualized per Q11 rule (project's own nouns).
+15c. **Orchestration mode** — who runs the execution task loop (06 §Dispatch). → STATE.md `orchestration`. `scale: small` → skip silently, default `session` (no orchestrator agent at small by default; `orchestration` subcommand can override). `maturity: prototype` → skip silently, default `session` noted. Option copy contextualized per Q11 rule (project's own nouns).
     - `session` — this session IS the orchestrator; dispatches builders/reviewer/gatekeepers directly; no orchestrator agent file (04 §4 must-haves bind to session). RECOMMEND small.
     - `agent/per-plan` — session spawns one orchestrator agent per macro-plan; orchestrator runs the task loop, reports compressed; independent workstreams → N parallel orchestrators, worktree each (06 §Dispatch). RECOMMEND medium+.
     - `agent/default-agent` — `.claude/settings.json {"agent":"orchestrator"}`; every session boots as the orchestrator; no parallel fan-out.
