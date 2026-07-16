@@ -12,6 +12,7 @@ strategy: TBD             # vertical-slice|integration-test-first|server-first|f
 gitflow: TBD              # true|false|custom
 commit_strategy: TBD      # <style>/<detail>/<signature> — style: conventional|gitmoji|free|custom; detail: body-when-why|always-detailed|minimal|squash-per-task; signature: none|co-author|custom
 worktrees: TBD            # per-phase|per-feature|ask|none — ask = prompt (current branch/new branch/worktree) at each substantial change
+orchestration: TBD        # session|agent/per-plan|agent/default-agent — who runs the execution loop (06 §Dispatch); agent/per-plan enables parallel orchestrators
 scale: TBD                # small|medium|large
 maturity: TBD             # prototype|mvp|production — quality bar, overrides per SKILL.md rule 2b
 repo_structure: TBD       # single|monorepo|polyrepo
@@ -128,7 +129,7 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 - Builders report shared-interface changes in task output
 
 ## Agents
-Default: <orchestrator or n/a>. Roster: <name — scope> per line.
+Orchestration: <session | agent/per-plan | agent/default-agent>. Default: <orchestrator — agent/default-agent mode only | n/a>. Roster: <name — scope> per line.
 
 ## Git
 - Branches: <pattern> | Commits: <style> (`commit_strategy` style)
