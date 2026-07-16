@@ -14,7 +14,7 @@
 - Long detailed answer → absorb everything it covers, prune later rounds.
 - Short answers fine; don't push for elaboration unless ambiguous.
 - After Round A, set `scale` in STATE.md — it prunes the remaining rounds per the SKILL.md rigor table.
-- After Round A, also set `maturity` (SKILL.md rule 2b) — **prototype**: skip Q13 (testing = smoke, noted), Q14 (gitflow = trunk, noted), Q15b (silently), Q16, Q17 (`make_workflow: none`), Q18, Round F; Q15 autonomy still asked (execution loop needs it). **mvp**: all asked; gates optional, no recommendation push; make_workflow default A. **production**: Q15b universals preselected as recommended; make_workflow leans C; Q18 becomes confirm (auto-include medium+).
+- After Round A, also set `maturity` (SKILL.md rule 2b) — **prototype**: skip Q13 (testing = smoke, noted), Q14 (gitflow = trunk, noted), Q15b (silently), Q15c (orchestration = session, noted), Q16, Q17 (`make_workflow: none`), Q18, Round F; Q15 autonomy still asked (execution loop needs it). **mvp**: all asked; gates optional, no recommendation push; make_workflow default A. **production**: Q15b universals preselected as recommended; make_workflow leans C; Q18 becomes confirm (auto-include medium+).
 
 ### Round A — Identity & scale (always)
 1. What is this? 2–3 sentences: problem, solution. (open)
@@ -96,6 +96,10 @@
     - `security-privacy` (compliance answered or sensitive data): threat-model conformance, data-handling checks.
     - `perf-budget` (NFR targets or stated perf constraint): budget benches on touched paths.
     → STATE.md `gates: [...]`. Empty selection → gating off, zero downstream footprint. Enforcement is scale-dependent (see 04/06): small → orchestrator inline checklist; medium+ → read-only gatekeeper agents.
+15c. **Orchestration mode** — who runs the execution task loop (06 §Dispatch). → STATE.md `orchestration`. `scale: small` → skip silently, default `session` (orchestrator agent never exists at small). `maturity: prototype` → skip silently, default `session` noted. Option copy contextualized per Q11 rule (project's own nouns).
+    - `session` — this session IS the orchestrator; dispatches builders/reviewer/gatekeepers directly; no orchestrator agent file (04 §4 must-haves bind to session). RECOMMEND small.
+    - `agent/per-plan` — session spawns one orchestrator agent per macro-plan; orchestrator runs the task loop, reports compressed; independent workstreams → N parallel orchestrators, worktree each (06 §Dispatch). RECOMMEND medium+.
+    - `agent/default-agent` — `.claude/settings.json {"agent":"orchestrator"}`; every session boots as the orchestrator; no parallel fan-out.
 16. CI/CD preference; lint/format tools.
 16b. **Commit strategy** — batched sub-choices (one `AskUserQuestion`, 3 single-selects); defaults recommended per row. `maturity: prototype` → skip, default `conventional/body-when-why/none` noted.
     - **style** (format grammar): `conventional` (`type(scope): subject`, machine-parseable, drives changelog/semver — RECOMMEND) / `gitmoji` (emoji prefix + summary) / `free` (imperative subject, no grammar) / `custom` (user pattern).
@@ -125,7 +129,7 @@ Write per templates.md, detailed-compressed style:
 - `docs/project/00-brief.md` — what/who/why, scale, platform, constraints.
 - `docs/project/10-requirements.md` — features (prioritized), journeys, integrations, NFRs, MVP vs deferred.
 - `small` scale: merge both into `00-brief.md`.
-- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches`, `strategy`, `maturity` (Q4b), `gates` (Q15b answer; `[]` if skipped/none).
+- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches`, `strategy`, `maturity` (Q4b), `gates` (Q15b answer; `[]` if skipped/none), `orchestration` (Q15c; `session` if skipped).
 - `maturity` prototype|mvp → create empty `docs/project/40-debt.md` (templates.md) + CLAUDE.md debt rule line.
 - Thin `CLAUDE.md` (templates.md) if absent.
 - Commit: `docs: discovery brief and requirements`.
