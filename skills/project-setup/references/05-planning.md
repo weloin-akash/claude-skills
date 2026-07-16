@@ -16,6 +16,7 @@ One AskUserQuestion batch, defaults = current STATE.md values:
 1. Worktree — driven by STATE.md `worktrees` policy (set Q14b), don't re-ask what the policy already decides: `per-phase` → auto-create for this phase (no ask); `per-feature`/`ask` → defer to execution (per substantial change, 06); `none` → current checkout. Only surface here when policy is `per-phase` (confirm path) or unset. Create → delegate `superpowers:using-git-worktrees` if installed, else `git worktree add ../<proj>-phase-N feat/phase-N-<name>`.
 2. Branch: gitflow (`feat/phase-N-<name>` off develop) / trunk / custom.
 3. Autonomy for this phase: AUTO / GUIDED / MANUAL.
+4. Parallel dispatch — only when `orchestration: agent/per-plan` AND the breakdown contains independent workstreams (no `Depends on` edges between them): offer one orchestrator per workstream, concurrent. Accepted → record workstream→orchestrator map in each progress file header; worktree per orchestrator mandatory (06 §Dispatch).
 Record answers → STATE.md (`worktrees`, `gitflow`, per-phase autonomy noted in progress file header).
 
 ## 3. Write the plan
