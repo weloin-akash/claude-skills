@@ -2,6 +2,19 @@
 
 Autonomy mode for this phase = progress file header (set at macro-plan ask). Delegate discipline: `superpowers:subagent-driven-development` (subagent-per-task) or `superpowers:executing-plans` if installed; the loop below is the contract either way.
 
+## Dispatch (STATE.md `orchestration`)
+
+Who runs the task loop:
+- `session` → this session runs the loop directly.
+- `agent/default-agent` → session already booted as orchestrator; loop as written.
+- `agent/per-plan` → spawn one orchestrator agent per macro-plan: dispatch = plan path + spec §refs + CLAUDE.md rules + phase autonomy mode (progress header); orchestrator runs the full loop, commits progress per task (rule 7 holds inside its scope); compressed report back to session. GUIDED pauses surface through the session.
+
+**Parallel dispatch** (2+ orchestrators concurrent; offered at macro-plan, 05 §2):
+- Worktree per orchestrator MANDATORY — overrides `worktrees: none` for this dispatch only (policy value untouched). Each orchestrator: own branch, own worktree, own progress file.
+- STATE.md single-writer: parallel orchestrators update ONLY their own progress file; STATE.md owned by the session — `next:` lists active workstreams; session reconciles at fan-in. Amends rule 7 for the parallel case only; all other modes keep same-commit STATE.md updates.
+- Fan-in: session merges per gitflow answer, cleans worktrees (§Plan completion merge rule), updates STATE.md + progress README in one commit.
+- Escalation: 3-failure rule (task loop step 2) escalates orchestrator→session→user; cross-workstream conflicts (scope/conventions/shared interfaces) → session→user, never resolved silently (04 §4).
+
 ## Isolation per substantial change (STATE.md `worktrees` policy)
 
 Trigger: a substantial change begins — new phase/feature/fix or a user request touching many files / core surfaces (trivial one-liners exempt). Resolve isolation from policy, don't re-ask what it decides:
