@@ -20,7 +20,7 @@ Run: `cat docs/project/STATE.md 2>/dev/null; ls -a; git status 2>/dev/null | hea
 | `STATE.md` exists | RESUME → read reference file for the recorded `phase`; execute its `next:` action |
 | `STATE.md` exists, user asks to re-initialize | Confirm destructive intent, then INIT |
 
-Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writes `2-architecture` directly on completion), `2-architecture`→03, `3-agents`→04, `4-planning`→05, `5-execution`→06. All file/doc skeletons live in `references/templates.md` — load it whenever a phase creates files. "Load ONE reference" = one per phase; a phase transition legitimately loads the next routed file. Never pre-read others.
+Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writes `2-architecture` directly on completion), `1b-ux-prototype`→07, `2-architecture`→03, `3-agents`→04, `4-planning`→05, `5-execution`→06. All file/doc skeletons live in `references/templates.md` — load it whenever a phase creates files. "Load ONE reference" = one per phase; a phase transition legitimately loads the next routed file. Never pre-read others.
 
 ## Subcommands (ARGUMENTS routing — checked BEFORE state detection)
 
@@ -33,14 +33,14 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 | `deploy` | 05 | `make_workflow` unset → ask scope A/B/C + local infra; invoke `weloin:deploy-setup` with scope (fallback per 05); record |
 | `gates` (alias `tests`) | 01 §Q15b + 04 + 06 | Show current `gates`; re-derive candidates, multi-select; update STATE.md; medium+ → create/update gatekeeper agents (04 §2); offer immediate gate run on current diff → gate report. Explicit invocation = opt-in — Q15b's AUTO/GUIDED condition does NOT apply here |
 | `autonomy` | — (rule 4) | Show `autonomy_default` + per-phase override; ask new; update STATE.md (+ progress header if mid-phase) |
-| `strategy` | 01 §Q11 | Re-ask with recommendation; update STATE.md + CLAUDE.md; `integration-test-first` → copy rule block (templates) |
+| `strategy` | 01 §Q11 | Re-ask with recommendation; update STATE.md + CLAUDE.md; `integration-test-first` → copy rule block (templates); `ui-complete-first` → also re-ask Q11b/Q11c (`fidelity_path`, design refs) |
 | `commits` | 01 §Q16b | Re-ask 3 sub-choices (style/detail/signature) with recommendations; update STATE.md `commit_strategy` + CLAUDE.md `## Git`; `signature` defers to stricter global/project rule |
 | `worktrees` | 01 §Q14b | Show current `worktrees` policy; re-ask (per-phase/per-feature/ask/none); update STATE.md; takes effect next macro-plan / substantial change |
 | `orchestration` (alias `orchestrator`) | 01 §Q15c + 04 | Show current `orchestration`; re-ask 3 options (default = current); update STATE.md + CLAUDE.md `## Agents`; →`agent/*` = create/update orchestrator agent (04 §2 update-aware); →`session` = retire-ask orchestrator file (04 §2 — default keep, mark deprecated); default-agent↔per-plan = settings.json add/remove ask (04 §5); applies next macro-plan |
 | `gitflow` (alias `branching`) | 01 §Q14 | Show current `gitflow`; re-ask (gitflow/trunk/custom); update STATE.md + CLAUDE.md `## Git` branches; applies next macro-plan / substantial change |
 | `scale` | 02 §1 + rule 2 + 05 | Scan-first, never a bare field flip. (1) **Scan** architecture (`20-architecture.md` if present, else audit repo per 02 §1) + deploy readiness — detect which envs exist: local (`make_workflow`/compose), staging, production (Helm/CI/K8s manifests, `deploy.sh`, env configs). (2) **Report** current `scale`, detected effective-scale signals (services, integrations, NFR presence), and env matrix (local/staging/prod: present / partial / absent). (3) Ask **target scale** (small/medium/large — the destination). (4) **Suggest** gap-closing actions derived from the scan to reach target: added rigor (rule 2 table — interview NFRs, agent roster tier, review gates), NFR/deployment doc, gatekeeper agents (`gates`), deploy scope to stand up missing staging/prod (`deploy` → `weloin:deploy-setup`). Present as a checklist, user picks. (5) Update STATE.md `scale` + record target/gap note in STATE.md `## Notes` if gaps deferred; each accepted gap dispatches its own subcommand. Going-forward, opt-in — existing docs/agents untouched unless user accepts re-derive (rule 6) |
 | `repo` (alias `structure`) | 01 §Q10b | Show current `repo_structure`; re-ask (single/monorepo/polyrepo); update STATE.md; layout migration is opt-in (rule 6) — flag impact, never auto-restructure |
-| `promote` (alias `maturity`) | 01 §Q4b + 05 | Show current `maturity`; upgrade one level (prototype→mvp→production): read `40-debt.md` (missing at prototype/mvp → warn, offer reconstruction scan); re-ask questions old level skipped (01 pruning rule); hardening plan via 05 §Hardening; user approves; STATE.md `maturity` + CLAUDE.md updated same commit. Downgrade = field edit + STATE.md note, no plan |
+| `promote` (alias `maturity`) | 01 §Q4b + 05 | Show current `maturity`; upgrade one level (concept→prototype→mvp→production; concept→prototype = viability-gate path 07 §6 — stage-2 interview, no hardening plan): read `40-debt.md` (missing at prototype/mvp → warn, offer reconstruction scan); re-ask questions old level skipped (01 pruning rule); hardening plan via 05 §Hardening; user approves; STATE.md `maturity` + CLAUDE.md updated same commit. Downgrade = field edit + STATE.md note, no plan |
 | `agents` | 04 | Update-aware roster review (04 §2) |
 | `plan` | 05 | Plan next phase now (macro-plan ask included) |
 | `status` | — | STATE.md + progress + `git log --oneline -5` → compressed report; zero writes |
@@ -50,7 +50,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 ## SSOT: docs/project/
 
-`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `gitflow`, `commit_strategy` (`<style>/<detail>/<signature>`), `worktrees`, `orchestration` (session|agent/per-plan|agent/default-agent), `scale` (small|medium|large), `maturity` (prototype|mvp|production), `repo_structure` (single|monorepo|polyrepo), `make_workflow` (none|A|B|C), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
+`STATE.md` header is machine-readable (see templates). Fields: `phase`, `autonomy_default` (AUTO|GUIDED|MANUAL), `strategy`, `fidelity_path` (wf-hifi-wire|wf-wire-hifi|hifi-direct|n-a — ui-complete-first only), `gitflow`, `commit_strategy` (`<style>/<detail>/<signature>`), `worktrees`, `orchestration` (session|agent/per-plan|agent/default-agent), `scale` (small|medium|large), `maturity` (concept|prototype|mvp|production), `repo_structure` (single|monorepo|polyrepo), `make_workflow` (none|A|B|C), `gates` (subset of gate ids; `[]` = off), `next`, `updated`. Every phase transition and every completed task updates `STATE.md` (`phase`/`next`/`updated`) **in the same commit** as the work. `CLAUDE.md` stays thin: index → SSOT docs + hard rules only. Never duplicate content between STATE.md, progress files, agent memory — each fact lives in exactly one place; others point to it.
 
 ## Global Rules (apply in every phase)
 
@@ -67,15 +67,15 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 2b. **Maturity overrides.** `maturity` in STATE.md = quality intent, orthogonal to `scale`: scale sets ceremony baseline (rule 2), maturity overrides quality bar. Conflict → maturity wins on quality items (tests, gates, security, config/DB discipline), scale wins on ceremony items (doc tree, roster size, interview length).
 
-   | | prototype | mvp | production |
-   |---|---|---|---|
-   | Tests | smoke only | core paths | full per Q13 |
-   | Gates (Q15b) | skipped silently | offered, optional | offered, universals recommended |
-   | Arch sections (03) | skip security/risks/NFR | boundaries mandatory (isolation test) | all + observability |
-   | Config/secrets | hardcode OK | `.env` | secrets manager from start |
-   | DB | drop-and-recreate OK | migrations from first schema | migrations + versioning |
-   | Debt ledger `40-debt.md` | required | required | n/a |
-   | DoD (06) | runs, demo path works; reviewer at plan-end only | task tests pass + reviewer per loop | full loop + gates |
+   | | concept | prototype | mvp | production |
+   |---|---|---|---|---|
+   | Tests | n/a (nothing built) | smoke only | core paths | full per Q13 |
+   | Gates (Q15b) | skipped silently | skipped silently | offered, optional | offered, universals recommended |
+   | Arch sections (03) | n/a (phase not reached) | skip security/risks/NFR | boundaries mandatory (isolation test) | all + observability |
+   | Config/secrets | n/a | hardcode OK | `.env` | secrets manager from start |
+   | DB | n/a | drop-and-recreate OK | migrations from first schema | migrations + versioning |
+   | Debt ledger `40-debt.md` | not created | required | required | n/a |
+   | DoD (06) | clickthrough demonstrates journey end-to-end (07 §6) | runs, demo path works; reviewer at plan-end only | task tests pass + reviewer per loop | full loop + gates |
 
 3. **Hybrid delegation.** Before doing a job inline, check if the listed skill is installed (appears in available-skills). Installed → invoke it. Missing → use the built-in fallback in the reference file. Never duplicate a delegated skill's logic.
 
@@ -86,6 +86,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
    | Plan execution discipline | `superpowers:executing-plans` / `superpowers:subagent-driven-development` | 06 |
    | Local dev + deployment pipeline | `weloin:deploy-setup` | 05 |
    | Worktree creation | `superpowers:using-git-worktrees` | 05 |
+   | UI prototype hi-fi pass | `frontend-design` | 07 |
 
 4. **Autonomy modes.** `AUTO` = execute all tasks, commit per task, report at end. `GUIDED` = pause at task-group boundaries. `MANUAL` = present each task, user approves. Default set in interview Round D, lives in STATE.md; **each execution-phase kickoff (macro-plan ask, rule 5) re-asks with the default preselected**. An explicit user instruction in the initiating message ("full auto", "check everything with me") counts as the answer — don't re-ask. Reviewer runs regardless of mode.
 5. **Ask-at-macro-plan.** Every time a phase/macro plan is created, ask (defaults = last recorded answers): gitflow branch? autonomy mode for this phase? Worktree is driven by the `worktrees` policy (set Q14b), not re-asked when the policy decides it: `per-phase` auto-isolates here; `per-feature`/`ask` defer to execution (06 §Isolation, per substantial change); `none` = current checkout. Record answers in STATE.md.
@@ -97,7 +98,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 ## Phase Sequence
 
-`0-init` (git init + scaffold) → `1-discovery` (interview → brief, requirements) → `2-architecture` (approaches → spec + ADRs) → `3-agents` (roster + model tags, update-aware) → `4-planning` (phase breakdown → plans + progress scaffold) → `5-execution` (task loops per autonomy mode). Phases 4↔5 cycle per plan until project done.
+`0-init` (git init + scaffold) → `1-discovery` (interview → brief, requirements) → `1b-ux-prototype` (ONLY when `strategy: ui-complete-first` or `maturity: concept`; clickable prototype → data contract / viability) → `2-architecture` (approaches → spec + ADRs) → `3-agents` (roster + model tags, update-aware) → `4-planning` (phase breakdown → plans + progress scaffold) → `5-execution` (task loops per autonomy mode). Phases 4↔5 cycle per plan until project done.
 
 ## Red Flags — STOP if you catch yourself
 
@@ -109,3 +110,5 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 - Skipping the interview because the project "is simple" — run it at `small` scale instead
 - Conscious shortcut at prototype/mvp maturity without a DEBT row in the same commit
 - Hardening or promoting maturity without consulting `docs/project/40-debt.md`
+- Writing backend code while a `1b-ux-prototype` phase is unapproved
+- Fixture drifting from what a screen displays — same-commit rule (07 §3)
