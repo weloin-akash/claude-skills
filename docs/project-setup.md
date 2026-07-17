@@ -23,7 +23,7 @@ A set-up project is never frozen. Each command shows the current value, re-asks,
 | `autonomy` | AUTO / GUIDED / MANUAL default or per-phase override |
 | `gates` *(`tests`)* | Configure quality gates; create gatekeeper agents (medium+); optionally run on current diff |
 | `deploy` | Make-based local/deploy workflow (scope A local / B deploy / C both) via `weloin:deploy-setup` |
-| `promote` *(`maturity`)* | Upgrade maturity one level (prototype→mvp→production): re-asks skipped questions, builds hardening plan from the debt ledger |
+| `promote` *(`maturity`)* | Upgrade maturity one level (concept→prototype→mvp→production): re-asks skipped questions, builds hardening plan from the debt ledger |
 
 ### Run an action
 
@@ -40,5 +40,6 @@ Asked during the interview, all recorded in `docs/project/STATE.md`:
 
 - **Gated development** — quality gates (regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget) work must pass before it counts as done; verdicts PASS / DONE_WITH_CONCERNS / FAIL with evidence reports under `docs/project/gates/`. Small projects: inline checklist; medium+: read-only gatekeeper agents.
 - **integration-test-first strategy** — integration tests written first, committed as an immutable contract; implementation makes them pass unmodified; changes update tests first so breakage enumerates every dependent.
+- **UI-first flow** — `ui-complete-first` strategy: the whole app clickable with fixture data before any backend exists; fidelity paths (wireframe→hi-fi→wire / wireframe→wire→hi-fi-polish / hi-fi-direct); phase exit derives `docs/project/15-data-contract.md` that the backend must conform to. `maturity: concept` = wireframe-only viability check — tech stack and backend decided only after the concept proves out.
 - **Make workflow** — canonical `make <env|surface> <action> [args]` interface (`make local up`, `make staging deploy`, `make local nuke`), built at the infra phase by `weloin:deploy-setup`.
 - **Repo structure** — explicit single-app / monorepo (`apps/` + `packages/`) / polyrepo choice driving layout and agent scoping.
