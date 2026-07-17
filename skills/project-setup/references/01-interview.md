@@ -14,7 +14,7 @@
 - Long detailed answer → absorb everything it covers, prune later rounds.
 - Short answers fine; don't push for elaboration unless ambiguous.
 - After Round A, set `scale` in STATE.md — it prunes the remaining rounds per the SKILL.md rigor table.
-- After Round A, also set `maturity` (SKILL.md rule 2b) — **prototype**: skip Q13 (testing = smoke, noted), Q14 (gitflow = trunk, noted), Q15b (silently), Q15c (orchestration = session, noted), Q16, Q17 (`make_workflow: none`), Q18, Round F; Q15 autonomy still asked (execution loop needs it). **mvp**: all asked; gates optional, no recommendation push; make_workflow default A. **production**: Q15b universals preselected as recommended; make_workflow leans C; Q18 becomes confirm (auto-include medium+).
+- After Round A, also set `maturity` (SKILL.md rule 2b) — **concept**: two-stage interview — ask ONLY Rounds A+B; skip Rounds C–F entirely (stack, testing, workflow, scope detail, NFRs — decided only after viability); stage-2 (the skipped rounds) runs at the viability gate (07 §6). **prototype**: skip Q13 (testing = smoke, noted), Q14 (gitflow = trunk, noted), Q15b (silently), Q15c (orchestration = session, noted), Q16, Q17 (`make_workflow: none`), Q18, Round F; Q15 autonomy still asked (execution loop needs it). **mvp**: all asked; gates optional, no recommendation push; make_workflow default A. **production**: Q15b universals preselected as recommended; make_workflow leans C; Q18 becomes confirm (auto-include medium+).
 
 ### Round A — Identity & scale (always)
 1. What is this? 2–3 sentences: problem, solution. (open)
@@ -22,6 +22,7 @@
 3. Platform: web app / website / mobile / desktop / cross-platform / CLI / library / browser ext / other.
 4. Scale: personal-small / team-medium / large userbase. ← sets `scale`
 4b. Maturity — how production-ready from day one? ← sets `maturity`; prunes downstream (adaptive rules below)
+    - **concept** — validate the idea as an end-to-end wireframe before committing to anything; no data, no backend, no tech stack.
     - **prototype** — validate idea; throwaway OK; speed over rigor.
     - **mvp** — ship minimal but extendable; boundaries enforced, shortcuts recorded in debt ledger.
     - **production** — hardened from day one.
@@ -49,7 +50,7 @@
     - **vertical-slice** — feature slice end-to-end → next slice — features ship independently (fallback default).
     - **integration-test-first** (contract-by-test) — API docs → integration tests committed as contract → implement → unit tests (per Q13) → suite green UNMODIFIED; tests conform code to concept, never reverse — complex API / multi-service / medium+ scale.
     - **server-first** — API + domain stable → UI — API must stabilize before UI.
-    - **frontend-first** — UI/UX flows → backend to fit — UX drives the domain model.
+    - **ui-complete-first** — entire app clickable with fixture data → iterate until user approves → derive data contract → backend built to conform — user must SEE the product before committing backend; UX drives the domain model.
     - **contract-first** — shared schemas/contracts → parallel implementation against them — multiple teams/agents on shared schemas.
     - **infrastructure-first** — platform/deploy/CI → app code — platform/deploy risk dominates.
     - **prototype-first** — quick prototype → validate → iterate or rebuild — core feasibility unknown.
@@ -71,12 +72,17 @@
     | Event-driven / async architecture | event-first | integration-test-first |
     | ML/LLM/agent product | eval-first | prototype-first |
     | Data pipeline / analytics | data-first | inside-out |
-    | UX-critical consumer app | frontend-first | behavior-first |
+    | UX-critical consumer app | ui-complete-first | behavior-first |
     | Infra/platform product | walking-skeleton | infrastructure-first |
     | Legacy modernization (ALIGN) | strangler-fig | integration-test-first |
     | Feasibility unknown / prototype maturity | spike-and-stabilize | prototype-first |
 
     Record in STATE.md `strategy` + CLAUDE.md. `integration-test-first` (or `event-first` — event schemas are the contract artifact) chosen → also copy the integration-test-first rule block into CLAUDE.md (templates.md → CLAUDE.md, Development Strategy section).
+11b. **Fidelity path** — ONLY when Q11 = `ui-complete-first`; asked immediately after Q11 (chronological — the answer decides whether 11c fires). → STATE.md `fidelity_path` (`n-a` for every other strategy).
+    - `wf-hifi-wire` — b/w wireframe all pages → hi-fi design → wire backend — design must be final before backend effort.
+    - `wf-wire-hifi` — wireframe → wire real backend → hi-fi as polish phase — functionally complete app early; polish last.
+    - `hifi-direct` — skip wireframe, straight to hi-fi → wire — simpler app, design direction already clear.
+11c. **Design references** — ONLY when 11b reaches hi-fi before wiring (`wf-hifi-wire`, `hifi-direct`): request references NOW (screenshots/URLs/app names — UI rule below). `wf-wire-hifi` → request deferred to the polish phase (05 §1).
 12. Stack preferences, or "suggest" (recommend from requirements; justify in one line each).
 13. Testing: unit / unit+integration / full TDD / +e2e / suggest.
 
@@ -121,7 +127,7 @@
 24. Multi-tenancy? Data residency? Audit logging?
 25. Expected team/agent parallelism; release cadence.
 
-**UI rule:** project has UI → request design references (screenshots, URLs, app names) BEFORE any UI design work, at latest by Phase 2. No references → offer `frontend-design` skill direction later; note in STATE.md.
+**UI rule:** project has UI → request design references (screenshots, URLs, app names) BEFORE any UI design work, at latest by Phase 2. No references → offer `frontend-design` skill direction later; note in STATE.md. `ui-complete-first`: Q11b/Q11c govern reference timing per `fidelity_path`.
 
 ## Outputs
 
@@ -129,7 +135,8 @@ Write per templates.md, detailed-compressed style:
 - `docs/project/00-brief.md` — what/who/why, scale, platform, constraints.
 - `docs/project/10-requirements.md` — features (prioritized), journeys, integrations, NFRs, MVP vs deferred.
 - `small` scale: merge both into `00-brief.md`.
-- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches`, `strategy`, `maturity` (Q4b), `gates` (Q15b answer; `[]` if skipped/none), `orchestration` (Q15c; `session` if skipped).
+- Update STATE.md: `phase: 2-architecture`, `next: propose architecture approaches` — BUT `strategy: ui-complete-first` OR `maturity: concept` → `phase: 1b-ux-prototype`, `next: page inventory from journey (07)`. Also record: `strategy`, `fidelity_path` (Q11b; `n-a` otherwise), `maturity` (Q4b), `gates` (Q15b answer; `[]` if skipped/none), `orchestration` (Q15c; `session` if skipped).
+- `maturity: concept` (stage-1): write merged `00-brief.md` only (Rounds A+B content); STATE.md `strategy: TBD`, `fidelity_path: n-a`; no debt ledger; thin CLAUDE.md still created.
 - `maturity` prototype|mvp → create empty `docs/project/40-debt.md` (templates.md) + CLAUDE.md debt rule line.
 - Thin `CLAUDE.md` (templates.md) if absent.
 - Commit: `docs: discovery brief and requirements`.
