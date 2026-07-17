@@ -6,15 +6,16 @@ All docs: detailed-compressed style — dense bullets/tables, no filler, no mean
 
 ```markdown
 # Project State
-phase: 1-discovery        # 0-init|1-discovery|2-architecture|3-agents|4-planning|5-execution
+phase: 1-discovery        # 0-init|1-discovery|1b-ux-prototype|2-architecture|3-agents|4-planning|5-execution
 autonomy_default: GUIDED  # AUTO|GUIDED|MANUAL
-strategy: TBD             # vertical-slice|integration-test-first|server-first|frontend-first|contract-first|infrastructure-first|prototype-first|inside-out|walking-skeleton|behavior-first|data-first|event-first|eval-first|strangler-fig|spike-and-stabilize|custom
+strategy: TBD             # vertical-slice|integration-test-first|server-first|ui-complete-first|contract-first|infrastructure-first|prototype-first|inside-out|walking-skeleton|behavior-first|data-first|event-first|eval-first|strangler-fig|spike-and-stabilize|custom
+fidelity_path: TBD        # wf-hifi-wire|wf-wire-hifi|hifi-direct|n-a — ui-complete-first only (Q11b)
 gitflow: TBD              # true|false|custom
 commit_strategy: TBD      # <style>/<detail>/<signature> — style: conventional|gitmoji|free|custom; detail: body-when-why|always-detailed|minimal|squash-per-task; signature: none|co-author|custom
 worktrees: TBD            # per-phase|per-feature|ask|none — ask = prompt (current branch/new branch/worktree) at each substantial change
 orchestration: TBD        # session|agent/per-plan|agent/default-agent — who runs the execution loop (06 §Dispatch); agent/per-plan enables parallel orchestrators
 scale: TBD                # small|medium|large
-maturity: TBD             # prototype|mvp|production — quality bar, overrides per SKILL.md rule 2b
+maturity: TBD             # concept|prototype|mvp|production — quality bar, overrides per SKILL.md rule 2b
 repo_structure: TBD       # single|monorepo|polyrepo
 make_workflow: TBD        # none|A(local-only)|B(deploy-only)|C(both) — built at infra phase via weloin:deploy-setup
 gates: []                 # subset of [regression, goal-alignment, compare-results, contract-compat, security-privacy, perf-budget]; [] = gating off
@@ -59,6 +60,20 @@ updated: YYYY-MM-DD
 ## Deferred
 - <post-MVP items>
 ```
+
+## 15-data-contract.md (ui-complete-first exit, 07 §5)
+
+```markdown
+# <Project> — Data Contract (derived from UI prototype)
+## Screens
+| Screen | Data shown | Fixture | Endpoints implied | Mutations (actions) | Parsing/transform |
+|---|---|---|---|---|---|
+| <name> | <fields user sees> | `fixtures/<file>.json` | `GET /api/…` | `POST /api/…` ← <user action> | <display format vs storage shape> |
+## Endpoint index
+- `VERB /path` — consumed by: <screens> — shape: `fixtures/<file>.json`
+```
+
+Fixtures = machine-readable truth; this doc = compressed index. Divergence = bug. Architecture (03) conforms to this; deviations → ADR.
 
 ## 20-architecture.md
 
