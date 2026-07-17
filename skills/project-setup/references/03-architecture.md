@@ -23,6 +23,8 @@ Present design compressed, section by section, ONE approval check per message-gr
 
 **UI:** if project has UI and user gave references, capture direction here (reference → what to take from it). No references yet → block UI-related sections until provided.
 
+**Data contract:** `docs/project/15-data-contract.md` exists → API/interface + data-model sections MUST conform to it — endpoints, shapes, parsing needs come FROM the contract; deviations get an ADR. UI direction = the prototype itself (references already captured in 1b).
+
 ## 3. Write docs
 
 Per templates.md, detailed-compressed:

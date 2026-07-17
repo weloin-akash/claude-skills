@@ -2,7 +2,7 @@
 
 ## 1. Phase breakdown
 
-Break spec into phases; each phase yields working, testable software. Order per `strategy` (vertical-slice → one complete feature per phase; server-first → API phases then UI; etc.). Present table:
+Break spec into phases; each phase yields working, testable software. Order per `strategy` (vertical-slice → one complete feature per phase; server-first → API phases then UI; etc.). `ui-complete-first` → backend phases sequenced per `15-data-contract.md`; wiring tasks replace fixture with live endpoint screen-by-screen (unwired screens keep fixtures — every phase still yields working software); `fidelity_path: wf-wire-hifi` → append a hi-fi polish phase to the breakdown (design references requested at its start). Present table:
 
 | Phase | Name | Depends on | Scope | Exit criteria |
 |---|---|---|---|---|
