@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
- * weloin-skills — install Claude Code skills from this package into ~/.claude/skills
+ * weloin-skills — install Claude Code skills from this package into ~/.claude/skills,
+ * and its slash commands into ~/.claude/commands/<namespace>/ (commands/weloin/save.md
+ * becomes /weloin:save). Skills are opt-in per skill; a command namespace is
+ * all-or-nothing, so every install/sync links it and `uninstall --all` removes it.
  *
  *   weloin-skills                       interactive checkbox picker
  *   weloin-skills --all                 install every skill
@@ -22,6 +25,12 @@ const SKILLS_SRC = path.join(PKG_ROOT, 'skills');
 const TARGET_DIR = process.env.WELOIN_SKILLS_TARGET || path.join(os.homedir(), '.claude', 'skills');
 const MANIFEST = process.env.WELOIN_SKILLS_MANIFEST || path.join(os.homedir(), '.claude', 'weloin-skills.json');
 const IS_WIN = process.platform === 'win32';
+// Slash commands ride along in the same package but land in ~/.claude/commands/<namespace>/,
+// where the directory name IS the namespace: commands/weloin/save.md -> /weloin:save.
+// They are not selectable like skills — a namespace is all-or-nothing, so every
+// install/sync links them and `uninstall --all` removes them.
+const COMMANDS_SRC = path.join(PKG_ROOT, 'commands');
+const COMMANDS_TARGET = process.env.WELOIN_COMMANDS_TARGET || path.join(os.homedir(), '.claude', 'commands');
 
 // ---------- helpers ----------
 
@@ -97,6 +106,69 @@ function backup(target) {
   const bak = `${target}.bak-${new Date().toISOString().slice(0, 19).replaceAll(':', '')}`;
   fs.renameSync(target, bak);
   return bak;
+}
+
+// Link every namespace under commands/ into ~/.claude/commands/. Same safety rules as
+// skills: our own link is replaced, a foreign directory is left alone unless --force
+// (and is backed up first). Copies where symlinks are not permitted.
+function linkCommands({ copy = false, force = false, log = console.log } = {}) {
+  if (!fs.existsSync(COMMANDS_SRC)) return 0;
+  const namespaces = fs.readdirSync(COMMANDS_SRC, { withFileTypes: true }).filter((d) => d.isDirectory());
+  if (!namespaces.length) return 0;
+  fs.mkdirSync(COMMANDS_TARGET, { recursive: true });
+  let n = 0;
+  for (const d of namespaces) {
+    const src = path.join(COMMANDS_SRC, d.name);
+    const target = path.join(COMMANDS_TARGET, d.name);
+    let state = 'none';
+    try {
+      const st = fs.lstatSync(target);
+      state = 'foreign';
+      if (st.isSymbolicLink()) {
+        try { if (fs.realpathSync(target) === fs.realpathSync(src)) state = 'linked'; } catch { /* dangling */ }
+      } else if (loadManifest().commands?.[d.name]?.mode === 'copy') {
+        state = 'copy';
+      }
+    } catch { /* none */ }
+
+    if (state === 'foreign') {
+      if (!force) { log(`  skip  /${d.name}:* — existing non-managed dir at ${target} (use --force to replace, backs up first)`); continue; }
+      log(`  moved existing to ${backup(target)}`);
+    } else if (state !== 'none') {
+      removeTarget(target);
+    }
+
+    let asCopy = copy;
+    if (asCopy) {
+      fs.cpSync(src, target, { recursive: true });
+    } else {
+      try {
+        fs.symlinkSync(src, target, IS_WIN ? 'junction' : 'dir');
+      } catch (e) {
+        log(`  symlink failed (${e.code}); falling back to copy`);
+        fs.cpSync(src, target, { recursive: true });
+        asCopy = true;
+      }
+    }
+    const m = loadManifest();
+    m.commands ||= {};
+    m.commands[d.name] = { mode: asCopy ? 'copy' : 'symlink' };
+    saveManifest(m);
+    const names = fs.readdirSync(src).filter((f) => f.endsWith('.md')).map((f) => `/${d.name}:${f.slice(0, -3)}`);
+    log(`  ${asCopy ? 'copied' : 'linked'}  ${names.join('  ')} -> ${target}`);
+    n++;
+  }
+  return n;
+}
+
+function unlinkCommands({ log = console.log } = {}) {
+  const m = loadManifest();
+  for (const ns of Object.keys(m.commands || {})) {
+    removeTarget(path.join(COMMANDS_TARGET, ns));
+    log(`  removed /${ns}:*`);
+  }
+  delete m.commands;
+  saveManifest(m);
 }
 
 function doInstall(skill, { copy = false, force = false, log = console.log }) {
@@ -181,7 +253,10 @@ if (cmd === 'list') {
 if (cmd === 'sync') {
   const m = loadManifest();
   const entries = Object.entries(m.installed || {});
-  if (!entries.length) { log('sync: nothing in manifest'); process.exit(0); }
+  // Commands are not opt-in per skill, so sync always refreshes them — including the
+  // first `npm install`, where the skills manifest is still empty.
+  linkCommands(opts);
+  if (!entries.length) { log('sync: no skills in manifest'); process.exit(0); }
   log(`Re-syncing ${entries.length} skill(s) from manifest:`);
   for (const [name, info] of entries) {
     const s = all.find((k) => k.name === name || k.dir === info.dir);
@@ -197,6 +272,7 @@ if (cmd === 'uninstall') {
     : null;
   if (!targets) { console.error('uninstall needs --all or --skills=a,b,c'); process.exit(1); }
   targets.forEach((s) => doUninstall(s, opts));
+  if (flags.has('--all')) unlinkCommands(opts); // a namespace is all-or-nothing
   process.exit(0);
 }
 
@@ -230,4 +306,5 @@ if (flags.has('--all')) {
 log(`Target: ${TARGET_DIR}  (mode: ${opts.copy ? 'copy' : 'symlink'})`);
 let ok = 0;
 for (const s of targets) if (doInstall(s, opts)) ok++;
+if (linkCommands(opts)) log(`Commands: ${COMMANDS_TARGET}`);
 log(`Done — ${ok}/${targets.length} installed.`);

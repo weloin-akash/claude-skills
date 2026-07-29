@@ -1,6 +1,6 @@
 # @weloin/claude-skills
 
-Weloin's [Claude Code](https://claude.com/claude-code) skills library — install with one command, updates via symlink. macOS · Linux · Windows.
+Weloin's [Claude Code](https://claude.com/claude-code) skills **and slash commands** library — install with one command, updates via symlink. macOS · Linux · Windows.
 
 ---
 
@@ -35,6 +35,23 @@ weloin-skills                          # pick skills interactively
 ```
 
 Full install, update, and CLI reference → **[docs/installation.md](./docs/installation.md)**.
+
+### Slash commands
+
+Skills are opt-in one by one. **Slash commands are not** — a namespace is all-or-nothing, so every
+install and every `sync` links `commands/<namespace>/` into `~/.claude/commands/<namespace>/`, and
+`uninstall --all` removes it. The directory name *is* the namespace: `commands/weloin/save.md`
+becomes `/weloin:save`.
+
+| Command | What it does |
+|---|---|
+| `/weloin:save [notes]` | Writes a resumable handoff into the **current project** — where the work stands, the exact next action, decisions already made, what was deliberately not done, what is in flight, and the traps. Commits that file only, never your uncommitted work. |
+| `/weloin:resume [notes]` | Reads the handoff, **verifies it against git** (commits landed since the save, branch, files that moved), gives a fifteen-second gist, and asks before touching anything. |
+
+The pair assumes the resume happens in a **completely different session** — new context, possibly a
+different machine. Anything not written to the file is lost, so `/weloin:save` records the reasoning
+behind decisions, not just their outcome. Both take free-text notes that outrank the saved plan:
+`/weloin:save we're abandoning the caching branch, pick up the migration instead`.
 
 ### What execution looks like (per feature / fix)
 
