@@ -1,6 +1,6 @@
 {
   "name": "@weloin/claude-skills",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Weloin's Claude Code skills + slash commands library, with a cross-platform installer (symlinks into ~/.claude)",
   "type": "module",
   "bin": {
