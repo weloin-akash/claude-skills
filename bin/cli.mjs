@@ -108,6 +108,34 @@ function backup(target) {
   return bak;
 }
 
+// state of ~/.claude/commands/<ns>: none | linked (ours) | copy (per manifest) | foreign
+function commandState(ns, src) {
+  const target = path.join(COMMANDS_TARGET, ns);
+  let st;
+  try { st = fs.lstatSync(target); } catch { return 'none'; }
+  if (st.isSymbolicLink()) {
+    try { if (fs.realpathSync(target) === fs.realpathSync(src)) return 'linked'; } catch { /* dangling */ }
+    return 'foreign';
+  }
+  return loadManifest().commands?.[ns]?.mode === 'copy' ? 'copy' : 'foreign';
+}
+
+// Every slash command in the package, flattened: commands/weloin/save.md -> /weloin:save.
+// State is per namespace (all-or-nothing), so each command carries its namespace's state.
+function readCommands() {
+  if (!fs.existsSync(COMMANDS_SRC)) return [];
+  const out = [];
+  for (const d of fs.readdirSync(COMMANDS_SRC, { withFileTypes: true }).filter((x) => x.isDirectory())) {
+    const src = path.join(COMMANDS_SRC, d.name);
+    const state = commandState(d.name, src);
+    for (const f of fs.readdirSync(src).filter((x) => x.endsWith('.md')).sort()) {
+      const fm = parseFrontmatter(path.join(src, f));
+      out.push({ name: `/${d.name}:${f.slice(0, -3)}`, desc: oneLine(fm.description), state });
+    }
+  }
+  return out;
+}
+
 // Link every namespace under commands/ into ~/.claude/commands/. Same safety rules as
 // skills: our own link is replaced, a foreign directory is left alone unless --force
 // (and is backed up first). Copies where symlinks are not permitted.
@@ -120,16 +148,7 @@ function linkCommands({ copy = false, force = false, log = console.log } = {}) {
   for (const d of namespaces) {
     const src = path.join(COMMANDS_SRC, d.name);
     const target = path.join(COMMANDS_TARGET, d.name);
-    let state = 'none';
-    try {
-      const st = fs.lstatSync(target);
-      state = 'foreign';
-      if (st.isSymbolicLink()) {
-        try { if (fs.realpathSync(target) === fs.realpathSync(src)) state = 'linked'; } catch { /* dangling */ }
-      } else if (loadManifest().commands?.[d.name]?.mode === 'copy') {
-        state = 'copy';
-      }
-    } catch { /* none */ }
+    const state = commandState(d.name, src);
 
     if (state === 'foreign') {
       if (!force) { log(`  skip  /${d.name}:* — existing non-managed dir at ${target} (use --force to replace, backs up first)`); continue; }
@@ -245,8 +264,14 @@ const all = readSkills();
 if (all.length === 0) { console.error(`No skills found in ${SKILLS_SRC}`); process.exit(1); }
 
 if (cmd === 'list') {
-  const w = Math.max(...all.map((s) => s.name.length));
+  const cmds = readCommands();
+  const w = Math.max(...all.map((s) => s.name.length), ...cmds.map((c) => c.name.length));
   for (const s of all) log(`${s.name.padEnd(w)}  ${STATE_ICON[s.state].padEnd(9)}  ${s.desc}`);
+  if (cmds.length) {
+    log('');
+    log('slash commands (installed with any skill, all-or-nothing):');
+    for (const c of cmds) log(`${c.name.padEnd(w)}  ${STATE_ICON[c.state].padEnd(9)}  ${c.desc}`);
+  }
   process.exit(0);
 }
 
@@ -288,6 +313,8 @@ if (flags.has('--all')) {
   // interactive checkbox picker
   if (!process.stdout.isTTY) { console.error('No TTY — use --all or --skills=a,b,c'); process.exit(1); }
   p.intro('weloin-skills installer');
+  const rideAlong = readCommands();
+  if (rideAlong.length) p.log.info(`Slash commands installed alongside any selection: ${rideAlong.map((c) => c.name).join('  ')}`);
   const picked = await p.multiselect({
     message: 'Select skills to install/update (space = toggle, a = all, enter = confirm)',
     options: all.map((s) => ({
