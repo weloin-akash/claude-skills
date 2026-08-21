@@ -169,6 +169,7 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 - Task done ⇒ progress + STATE.md updated in same commit
 - Conscious shortcut ⇒ row in `docs/project/40-debt.md`, same commit   <!-- maturity: prototype|mvp only -->
 - Agent conflicts (scope/conventions/interfaces) → escalate to user, never silent
+- Roster/CLAUDE.md/memory drift: orchestrator detects proactively (new stack, out-of-scope failures, uncovered gates, repeated corrections) and proposes the concrete diff; user approves before any write — never wait for the user to notice
 - Builders report shared-interface changes + contract deltas in task output
 - Contracts: work against the boundary contract (`docs/project/contracts/`), never the layer below; contract change = own commit, landed first   <!-- medium+ -->
 - Zero warnings; never suppress a warning or purity/contract violation to compile   <!-- mvp+ -->
