@@ -116,6 +116,33 @@ Fixtures = machine-readable truth; this doc = compressed index. Divergence = bug
 
 Every conscious shortcut = row, same commit as the work. Rows never deleted; resolved → `resolved (<commit/plan ref>)`. `promote` sources its hardening plan from open rows.
 
+## Contract doc (rule 12; medium+ & mvp+) → `docs/project/contracts/<boundary>.md`
+
+```markdown
+# Contract — <boundary>   <!-- e.g. ui-data-port, http-api, ffi-bridge, events -->
+source: <type/schema files the doc derives from>   drift-check: <generator or test cmd that goes red on drift>   owner: <agent>
+
+| Operation / field | In | Out | Errors (consumer must handle) | Optional? |
+|---|---|---|---|---|
+
+Capabilities: `<flag>` — <meaning>. Consumers branch on flags, never platform checks.
+Forward-compat: unknown field/variant degrades gracefully, never hard-fails.
+Change rule: contract commit lands first, alone; consumers fan out after (rule 12).
+```
+
+One doc per boundary — the ONLY thing an agent needs to read to work in the layer above. Contract answers missing → fix the contract in the same wave, never reach through it.
+
+## 50-enforcement.md (gates non-empty) → `docs/project/50-enforcement.md`
+
+```markdown
+# Enforcement — gates ledger
+| Rule | Gate (exact command) | Status | Exceptions (freeze-and-ratchet — list only shrinks) |
+|---|---|---|---|
+| <binding rule> | <CI's exact invocation; variant/feature builds BOTH ways> | BUILT \| OWED (<owner, trigger>) | <file:line rows frozen at adoption; or —> |
+```
+
+BUILT = can go red today; OWED = rule stated, gate pending. Never assume a gate exists — check here. Never add an exception row to make work pass; each fix deletes its own row. Enforcement lands BEFORE the structural fixes it protects.
+
 ## CLAUDE.md (thin; MERGE if exists — never overwrite)
 
 ```markdown
@@ -138,13 +165,24 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 ## Rules
 - Doc style: detailed-compressed (dense, complete, no filler)
 - <testing requirement>
+- Code shape: small single-responsibility files (~800-line soft cap, boy-scout split); tests in per-module `tests/` subfolders (or stack mirror convention) — never inline/sibling test files
 - Task done ⇒ progress + STATE.md updated in same commit
 - Conscious shortcut ⇒ row in `docs/project/40-debt.md`, same commit   <!-- maturity: prototype|mvp only -->
 - Agent conflicts (scope/conventions/interfaces) → escalate to user, never silent
-- Builders report shared-interface changes in task output
+- Builders report shared-interface changes + contract deltas in task output
+- Contracts: work against the boundary contract (`docs/project/contracts/`), never the layer below; contract change = own commit, landed first   <!-- medium+ -->
+- Zero warnings; never suppress a warning or purity/contract violation to compile   <!-- mvp+ -->
+- Capabilities, never platforms: feature/UI code branches on declared capability flags, not OS/vendor checks
+
+## Style (always on)   <!-- style skills accepted at roster approval (04 §Style skills) -->
+Two project skills define how everyone writes and codes — ENABLED BY DEFAULT for every agent and session; invoke via Skill tool only for the full text:
+- **`caveman`** (`.claude/skills/caveman/SKILL.md`) — terse prose for reports/reviews/audits/plans/progress. Drop filler, keep ALL substance (file:line refs, real numbers, verbatim errors). NORMAL prose in code, comments, commit messages, security warnings, order-critical sequences.
+- **`ponytail`** (`.claude/skills/ponytail/SKILL.md`) — laziest solution that works: reuse ladder, no unrequested abstractions, deletion over addition; mark corner-cuts with a `ponytail:` comment naming ceiling + upgrade path (+ `40-debt.md` row when a real shortcut). Never simplify away trust-boundary validation, error handling, security, spec requirements, or tests.
+Agent defs carry the same rules inline (zero invocation cost); the skills are the canonical long form — change both together.
 
 ## Agents
 Orchestration: <session | agent/per-plan | agent/default-agent>. Default: <orchestrator — agent/default-agent mode only | n/a>. Roster: <name — scope> per line.
+Utility (cavecrew, compressed output): `cavecrew-investigator` — locate code (file:line) before builder dispatch; `cavecrew-builder` — surgical 1–2 file edits (refuses 3+); `cavecrew-reviewer` — small-diff reviews between plan boundaries.
 
 ## Git
 - Branches: <pattern> | Commits: <style> (`commit_strategy` style)
@@ -168,6 +206,7 @@ Task detail → phase files.
 # Phase N: <Name>
 status: not-started | in-progress | complete
 branch: feat/phase-N-<name>   worktree: <path|none>   autonomy: <mode>
+contracts: <touched contracts from plan header | none>
 started: — completed: —
 
 ## Tasks
@@ -181,9 +220,10 @@ started: — completed: —
 ## Review
 - [ ] Spec conformance
 - [ ] Cross-agent conformance   <!-- medium+ -->
+- [ ] Layer purity + contract docs match shipped deltas   <!-- medium+ & mvp+ -->
 
 ## Notes
-- <blockers, decisions, deviations>
+- <blockers, decisions, deviations, contract deltas (which contract, what changed)>
 ```
 
 ## Gate report → `docs/project/gates/<task-group>-gate.md` (gated dev only)
@@ -191,6 +231,7 @@ started: — completed: —
 ```markdown
 # Gate Report — <task-group>
 base: <commit sha at group start>   date: YYYY-MM-DD   overall: PASS | DONE_WITH_CONCERNS | FAIL
+evidence: <captured output file path(s) — a verdict without its capture file is invalid (06 §5b)>
 
 | Gate | Verdict | Evidence |
 |---|---|---|
@@ -224,9 +265,10 @@ You are the <role> for <project>.
 
 ## Conventions
 - <stack standards, testing requirement, doc style: detailed-compressed>
+- Code shape rule 11; contracts rule 12 (work against `docs/project/contracts/`, never the layer below; no suppressions)   <!-- + inline style-skill rules (04 §Style skills) if installed -->
 
 ## Reporting
-- What built/changed, tests run+results, **shared interfaces touched** (APIs/types/schemas), shortcuts taken (debt candidates; prototype/mvp), deviations.
+- What built/changed, tests run+results, **shared interfaces touched** (APIs/types/schemas) + **contract deltas**, shortcuts taken (debt candidates; prototype/mvp), deviations.
 ```
 
 ## .gitignore (init path)

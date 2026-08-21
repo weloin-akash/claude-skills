@@ -54,7 +54,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 ## Global Rules (apply in every phase)
 
-1. **Doc style — detailed-compressed.** Every generated doc: dense bullets/tables, telegraphic sentences, zero filler, zero meaning loss. No prose padding. This rule is inherited by all agents this skill creates.
+1. **Doc style — detailed-compressed.** Every generated doc: dense bullets/tables, telegraphic sentences, zero filler, zero meaning loss. No prose padding. This rule is inherited by all agents this skill creates. Long form of the discipline = the two style skills (`caveman` prose + `ponytail` code) shipped in `assets/style-skills/` and installed as project skills at phase 3 (04 §Style skills, default ON).
 2. **Scale-adaptive rigor.** `scale` in STATE.md controls ceremony, never fundamentals (SSOT, boundaries, tests, reusability always hold):
 
    | | small | medium | large |
@@ -75,6 +75,8 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
    | Config/secrets | n/a | hardcode OK | `.env` | secrets manager from start |
    | DB | n/a | drop-and-recreate OK | migrations from first schema | migrations + versioning |
    | Debt ledger `40-debt.md` | not created | required | required | n/a |
+   | Warnings | n/a | tolerated (log count) | zero — a warning is a defect | zero + never-suppress (rule 12) |
+   | Contract docs (rule 12) | n/a | named in design only | docs + drift check (`medium+`) | docs + drift check in gate |
    | DoD (06) | clickthrough demonstrates journey end-to-end (07 §6) | runs, demo path works; reviewer at plan-end only | task tests pass + reviewer per loop | full loop + gates |
 
 3. **Hybrid delegation.** Before doing a job inline, check if the listed skill is installed (appears in available-skills). Installed → invoke it. Missing → use the built-in fallback in the reference file. Never duplicate a delegated skill's logic.
@@ -87,6 +89,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
    | Local dev + deployment pipeline | `weloin:deploy-setup` | 05 |
    | Worktree creation | `superpowers:using-git-worktrees` | 05 |
    | UI prototype hi-fi pass | `frontend-design` | 07 |
+   | Code location / surgical 1–2 file edit / small-diff review | project cavecrew agents (installed at phase 3, 04 §Utility agents) | 06 |
 
 4. **Autonomy modes.** `AUTO` = execute all tasks, commit per task, report at end. `GUIDED` = pause at task-group boundaries. `MANUAL` = present each task, user approves. Default set in interview Round D, lives in STATE.md; **each execution-phase kickoff (macro-plan ask, rule 5) re-asks with the default preselected**. An explicit user instruction in the initiating message ("full auto", "check everything with me") counts as the answer — don't re-ask. Reviewer runs regardless of mode.
 5. **Ask-at-macro-plan.** Every time a phase/macro plan is created, ask (defaults = last recorded answers): gitflow branch? autonomy mode for this phase? Worktree is driven by the `worktrees` policy (set Q14b), not re-asked when the policy decides it: `per-phase` auto-isolates here; `per-feature`/`ask` defer to execution (06 §Isolation, per substantial change); `none` = current checkout. Record answers in STATE.md.
@@ -95,6 +98,8 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 8. **Idempotent.** Re-running the skill never redoes finished work — routing table resumes.
 9. **User gates.** Written spec, agent roster, phase breakdown, each plan: user approves before proceeding (in AUTO mode, gates still apply to these artifacts — autonomy covers task execution only).
 10. **Git.** Follow STATE.md `commit_strategy` (style/detail/signature, set Q16b, re-ask via `commits`) and user's global/project commit rules. AI attribution in commits: default none; only include if `commit_strategy` signature ≠ none AND no stricter global/project CLAUDE.md rule forbids it.
+11. **Code shape (all scales, all maturities).** Small single-responsibility files (soft cap ~800 lines; boy-scout split on touch). Test code separated from production code — per-module `tests/` subfolder or the stack's mirror convention (`__tests__/` mirrors, `_test.go` grouped), NEVER inline test blocks or sibling `*_tests.*` files next to production sources. Shared utilities → dedicated modules with clear interfaces. Inherited by every agent this skill creates.
+12. **Layer contracts + mechanism enforcement.** Every cross-boundary interface (API, FFI/bridge, schema, event, UI-data port) is a published contract: consumers work against the contract, never the implementation below it; contract gap → fix the contract in the same change, never reach through it. A contract change is its own commit, landed FIRST; consumers update after — contract + consumers never in one wave (06 §Dispatch). Feature/UI code asks **capabilities, never platforms** (branch on declared adapter flags, not `if os == ...`). `medium+` scale & `mvp+` maturity: one contract doc per boundary in `docs/project/contracts/` (templates.md), **generated or drift-tested — hand-maintained contract docs rot**. Enforcement is mechanism, never prose: a binding rule ships a check that can go red; `gates` non-empty → ledger `docs/project/50-enforcement.md` tracks each gate BUILT vs OWED — never assume a gate exists. New gates land **freeze-and-ratchet**: today's violations = explicit exception list; the list may only shrink; NEVER add an exception to make work pass; enforcement lands BEFORE the structural fixes it protects. NEVER suppress a warning or purity/contract violation to make code compile (`#[allow]`, `eslint-disable`, `@ts-ignore`, `@Suppress`, `//nolint`) — fix the design, or change the rule with a stated reason; existing suppressions in touched code get removed or justified inline.
 
 ## Phase Sequence
 
@@ -112,3 +117,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 - Hardening or promoting maturity without consulting `docs/project/40-debt.md`
 - Writing backend code while a `1b-ux-prototype` phase is unapproved
 - Fixture drifting from what a screen displays — same-commit rule (07 §3)
+- Landing a contract change and its consumers in one commit/wave (rule 12)
+- Adding a suppression (`@ts-ignore`, `#[allow]`, …) to silence a warning or boundary violation
+- Adding an exception row to a gate's freeze-list to make a wave pass
+- Accepting "gates green" without captured output covering the boundary that changed (06 §5b)

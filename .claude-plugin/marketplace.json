@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "weloin-skills",
+  "description": "Weloin project-setup skill family plus the caveman + ponytail style plugins it installs by default.",
+  "owner": {
+    "name": "weloin-akash",
+    "url": "https://github.com/weloin-akash"
+  },
+  "plugins": [
+    {
+      "name": "caveman",
+      "description": "Ultra-compressed communication mode. Terse prose, full technical substance kept.",
+      "source": "./plugins/caveman",
+      "category": "productivity"
+    },
+    {
+      "name": "ponytail",
+      "description": "Lazy senior dev mode. Forces the simplest, shortest solution that actually works.",
+      "source": "./plugins/ponytail",
+      "category": "productivity"
+    }
+  ]
+}

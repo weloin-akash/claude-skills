@@ -24,9 +24,9 @@ Record answers → STATE.md (`worktrees`, `gitflow`, per-phase autonomy noted in
 Delegate: `superpowers:writing-plans` installed → invoke it; output to `docs/project/plans/phase-N-<name>.md`.
 
 Fallback format (same path):
-- Header: goal, exit criteria, spec refs (§), branch, worktree, autonomy, DoD per `maturity` (rule 2b).
+- Header: goal, exit criteria, spec refs (§), branch, worktree, autonomy, DoD per `maturity` (rule 2b), **contracts touched** (list from `docs/project/contracts/` or the design's boundary list; `none` stated explicitly — rule 12).
 - File map: files created/modified.
-- Bite-sized tasks (2–10 min each): exact paths, exact commands, complete code (not "add validation"), TDD order (test → fail → implement → pass), 1 commit per task.
+- Bite-sized tasks (2–10 min each): exact paths, exact commands, complete code (not "add validation"), TDD order (test → fail → implement → pass), 1 commit per task. Contract-delta tasks sequenced FIRST, each its own commit; consumer tasks depend on them (rule 12).
 - `strategy: integration-test-first` → per feature the plan MUST sequence: (a) API docs/contract task; (b) integration-tests task, committed `test: integration contract for <feature>`; (c) implementation task(s); (d) unit-tests task (if Q13 enabled); (e) verification task: integration suite green + `git diff <contract-commit>..HEAD -- <integration test paths>` shows zero assertion changes. Plan header records contract-commit placeholder for (e).
 
 Infra/deploy phase → STATE.md `make_workflow` != none → invoke `weloin:deploy-setup` (installed) passing recorded scope (A local-only / B deploy-only / C both) + local-infra answer so it skips re-asking; it scans real code at this point — that's why the build waits until here. Fallback (not installed): minimal Makefile + compose + single CI workflow honoring `make <env|surface> <action> [args]`, documented in plan. `make_workflow: none` → skip.

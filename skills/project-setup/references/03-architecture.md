@@ -19,6 +19,8 @@ Present design compressed, section by section, ONE approval check per message-gr
 
 **Design-for-isolation test per unit:** can you state what it does, how it's used, what it depends on — without reading internals? No → redraw boundary.
 
+**Boundary = published contract (SKILL.md rule 12):** every interface between units gets contract-level definition in the design — operations/fields + types, error semantics the consumer must handle, optionality + forward-compat rule (unknown field/variant degrades, never hard-fails), capability flags an implementation declares. Feature/UI code branches on capability flags, never platform checks. `medium+` & `mvp+`: each boundary becomes a doc in `docs/project/contracts/` (templates.md) with a generator or drift test — the drift test joins the quality gate; a hand-maintained contract doc rots.
+
 **Debt-aware design (prototype/mvp):** consciously deferred concerns surfaced during design (auth stub, no rate limiting, drop-and-recreate DB) → name them in the design; each becomes a `40-debt.md` row when built (06).
 
 **UI:** if project has UI and user gave references, capture direction here (reference → what to take from it). No references yet → block UI-related sections until provided.
