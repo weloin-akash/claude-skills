@@ -6,7 +6,7 @@ Start it with `/weloin:project-setup` (or just say "set up a new project"). Bare
 
 ## Subcommands
 
-Focused entry points — skip the phase machine, do one thing. **Every command below takes the `/weloin:project-setup ` prefix** (shown once here, omitted in the tables). Free text after a subcommand is context the skill absorbs and won't re-ask — e.g. `deploy use kubernetes, single node, ghcr images`.
+Focused entry points — skip the phase machine, do one thing. **You never need to memorize these:** plain language routes to the same flows by intent ("switch us to trunk-based" → `gitflow`, "we just added an iOS app" → `align`, "this is production now" → `promote`). The names below are shortcuts. **Every command takes the `/weloin:project-setup ` prefix** (shown once here, omitted in the tables). Free text after a subcommand is context the skill absorbs and won't re-ask — e.g. `deploy use kubernetes, single node, ghcr images`.
 
 ### Re-set configuration
 
