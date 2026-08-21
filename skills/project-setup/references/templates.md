@@ -146,6 +146,7 @@ BUILT = can go red today; OWED = rule stated, gate pending. Never assume a gate 
 ## CLAUDE.md (thin; MERGE if exists — never overwrite)
 
 ```markdown
+<!-- project-setup: v<skill version> — upgrade baseline stamp; `upgrade` diffs against this -->
 # <Project>
 <one-line description>
 
@@ -215,6 +216,7 @@ Task detail → phase files.
 status: not-started | in-progress | complete
 branch: feat/phase-N-<name>   worktree: <path|none>   autonomy: <mode>
 contracts: <touched contracts from plan header | none>
+workstream: <name → orchestrator | n/a>   <!-- parallel dispatch only (05 §2.4) -->
 started: — completed: —
 
 ## Tasks
