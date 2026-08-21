@@ -8,7 +8,7 @@ Detect, in parallel where possible:
 1. Structure: top-level dirs, service boundaries (`ls`, Explore agent for large repos).
 2. Stack: `package.json` / `go.mod` / `requirements.txt` / `pyproject.toml` / `Cargo.toml` / `Gemfile` / `pom.xml` / `composer.json` / Docker files / Makefile.
 3. Architecture shape: monolith / multi-service / monorepo from layout + configs.
-4. Git conventions: `git log --oneline -20` (commit style), `git branch -a` (naming, gitflow?).
+4. Git conventions: `git log --oneline -20` (commit style), `git branch -a` (naming, gitflow?). **No git repo / empty history:** ask user first, then `git init` + one baseline commit of the existing tree (`chore: baseline existing code`) — adoption needs a commit to diff against; user declines → STOP, adoption requires version control. Git-derived findings marked `n/a (fresh repo)`; commit style + branching asked in the interview (§2 Q9 → Q16b/Q14 from 01) instead of detected.
 5. CI/CD: `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`.
 6. Standards: linters, formatters, `README.md`, `CONTRIBUTING.md`.
 7. Tests: dirs, configs, script commands; run count if cheap.
