@@ -35,7 +35,7 @@
 8. External integrations: APIs, DB, auth providers, payments, messaging, storage.
 9. Hard constraints: required stack, existing infra, compliance (GDPR/HIPAA/SOC2/PCI), offline, perf, budget.
 
-### Round C — Stack & strategy (always; batched choices)
+### Round C — Stack & strategy (always except concept; batched choices)
 10. Architecture: monolith / modular monolith / multi-service / microservices / monorepo multi-service / suggest.
 10b. Repo structure — recommend from Q10 (multi-service → monorepo; monolith → single-app unless shared libs planned):
     - **single-app repo** — one app, flat layout.
@@ -117,7 +117,7 @@
     → STATE.md `make_workflow: none|A|B|C` + local-infra note. CLAUDE.md gains `## Commands` section (templates.md); rule: env/lifecycle ops via make targets — docs never instruct raw docker/kubectl/helm when a target exists. Built at infra/deploy phase via `weloin:deploy-setup` (05) — asked now, never built now.
 18. Security auditing agent wanted? (report-only scanner; categories scoped to stack) — medium+ only, auto-include for large.
 
-### Round E — Scope (always)
+### Round E — Scope (always except concept)
 19. MVP: absolute minimum to launch/demo/validate. (open)
 20. Deferred: nice-to-haves that wait. (open)
 21. Deadlines / external commitments?

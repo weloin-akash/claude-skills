@@ -32,7 +32,7 @@ Present design compressed, section by section, ONE approval check per message-gr
 Per templates.md, detailed-compressed:
 - `docs/project/20-architecture.md` (ALIGN path: `## Current` + `## Target`)
 - `docs/project/30-decisions.md` — ADR log, one-liners: `ADR-N | decision | context→consequence | date`. `small` scale: ADRs inline in architecture doc.
-- `large` only: `21-nfr.md`, `22-deployment.md` (delegate content design to `weloin:deploy-setup` if installed — invoke it during Phase 4/5 for actual setup; here only record the chosen strategy).
+- `large` only: `21-nfr.md`, `22-deployment.md` — freeform, no template block (structure from `weloin:deploy-setup` if installed — invoke it during Phase 4/5 for actual setup; here only record the chosen strategy).
 - Client-facing deliverable wanted? → invoke `weloin:create-requirements` (installed) or decline politely with what the internal docs already cover (fallback: internal docs are the spec).
 
 ## 4. Self-review, then user gate

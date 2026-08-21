@@ -177,8 +177,8 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 
 ## Style (always on)   <!-- style skills accepted at roster approval (04 §Style skills) -->
 Two project skills define how everyone writes and codes — ENABLED BY DEFAULT for every agent and session; invoke via Skill tool only for the full text:
-- **`caveman`** (`.claude/skills/caveman/SKILL.md`) — terse prose for reports/reviews/audits/plans/progress. Drop filler, keep ALL substance (file:line refs, real numbers, verbatim errors). NORMAL prose in code, comments, commit messages, security warnings, order-critical sequences.
-- **`ponytail`** (`.claude/skills/ponytail/SKILL.md`) — laziest solution that works: reuse ladder, no unrequested abstractions, deletion over addition; mark corner-cuts with a `ponytail:` comment naming ceiling + upgrade path (+ `40-debt.md` row when a real shortcut). Never simplify away trust-boundary validation, error handling, security, spec requirements, or tests.
+- **`caveman`** (plugin, or project skill `.claude/skills/caveman/SKILL.md` — per install tier, 04 §Style skills) — terse prose for reports/reviews/audits/plans/progress. Drop filler, keep ALL substance (file:line refs, real numbers, verbatim errors). NORMAL prose in code, comments, commit messages, security warnings, order-critical sequences.
+- **`ponytail`** (plugin, or project skill `.claude/skills/ponytail/SKILL.md` — per install tier) — laziest solution that works: reuse ladder, no unrequested abstractions, deletion over addition; mark corner-cuts with a `ponytail:` comment naming ceiling + upgrade path (+ `40-debt.md` row when a real shortcut). Never simplify away trust-boundary validation, error handling, security, spec requirements, or tests.
 Agent defs carry the same rules inline (zero invocation cost); the skills are the canonical long form — change both together.
 
 ## Agents

@@ -32,7 +32,7 @@ Batched AskUserQuestion; ask ONLY what audit cannot answer:
 6. Change anything about current process? (testing, conventions, CI) — default: nothing.
 7. Testing expectation going forward.
 8. Autonomy default: AUTO / GUIDED / MANUAL.
-9. Gitflow: keep detected pattern / change.
+9. Gitflow + commit style: keep detected pattern / change (catalogs: 01 Q14 branching, Q16b commit strategy).
 10. Security audit agent? (medium+; report-only)
 11. Anything else.
 
