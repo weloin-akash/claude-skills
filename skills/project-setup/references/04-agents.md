@@ -14,7 +14,9 @@ Orchestrator row conditional on STATE.md `orchestration` (01 §Q15c): created on
 
 Gated dev (STATE.md `gates` non-empty): `small` adds NO agents — orchestrator runs the gate checklist inline (06). `medium`/`large` add one read-only **gatekeeper** agent per selected gate (`.claude/agents/<gate>-gate.md`, e.g. `regression-gate`); builders-vs-gatekeepers split — builders never grade own homework.
 
-Builder split rule: 1 per tech boundary (frontend/backend/service-per-language); same-language monorepo → split by domain, max 2.
+Builder split rule: 1 per tech boundary (frontend/backend/service-per-language); same-language monorepo → split by domain, max 2. Boundary = language × platform × toolchain (rule 13) — a cross-platform client (Android/iOS/desktop shell) is one builder with per-platform glue in scope UNTIL a platform grows its own build+native surface, then it's a new boundary.
+
+**Roster re-derivation (rule 13 trigger — plan completion, phase transition, ALIGN):** the boundary-drift check found a new/dead boundary → re-enter THIS phase's §2 update-aware flow scoped to the delta: propose build/edit/retire + the CLAUDE.md `## Agents`, contract-doc, and gate-command updates the changed stack needs; user approves; apply + commit before the next plan dispatches. Never patch an agent's scope silently mid-wave.
 
 **Model tags** (user adjusts): orchestrator + architecturally-complex builders → `opus`; mechanical builders, tester, reviewer, security → `sonnet`; `inherit` acceptable default when user has no preference.
 
@@ -27,6 +29,8 @@ Present roster as table: name / role / scope (dirs) / tools / model. AskUserQues
 2. Diff vs desired roster → table: keep-as-is / update (what changes) / add / retire.
 3. User approves diff. Update = edit in place preserving user's manual customizations (anything not conflicting with new scope). Retire = ask before delete; default: leave file, note deprecated in its description.
 Never blind-overwrite an existing agent file.
+
+**This flow gates EVERY agent-file change, from any trigger** — phase-3 roster design, `agents` subcommand, boundary-drift delta (rule 13), initial alignment (02 §5), or an incidental "the agent def needs a tweak" mid-execution. Rule 9: user approval BEFORE the write, in every autonomy mode — AUTO never waives it. Normal code/doc edits are untouched by this gate.
 
 ## 3. Agent file format
 

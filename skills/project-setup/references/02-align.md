@@ -18,6 +18,8 @@ Detect, in parallel where possible:
 
 Present compressed audit table: stack / architecture / commit style / branches / CI / tests / docs / deploy envs (local·staging·prod) → one line each.
 
+**Boundary map (feeds roster + gates, rule 13):** from findings 1–3 + 5, list every tech boundary explicitly — language × platform × toolchain (e.g. `rust core / go server / ts client / android / ios / desktop-shell`), each with: build entry point, test command, CI coverage (built in CI? which OS runner?). A boundary CI never builds is a finding, not a footnote.
+
 ## 2. Shortened interview
 
 Batched AskUserQuestion; ask ONLY what audit cannot answer:
@@ -51,5 +53,13 @@ Batched AskUserQuestion; ask ONLY what audit cannot answer:
 - `docs/project/10-requirements.md` — existing features marked ✅ done; remaining work as requirements.
 - Progress scaffold later (Phase 4) pre-populates completed items.
 - Commit: `docs: adopt project into structured workflow`.
+
+## 5. Initial alignment (every existing-project adoption — before Phase 2)
+
+One pass, compressed report, user approves each delta before applying (rule 6 holds — propose, never impose):
+1. **Roster vs boundary map (rule 13):** existing `.claude/agents/` scope lines vs the audit's boundary map → uncovered boundary / stale agent / scope overlap table; deltas via 04 §2 update-aware diff. No agents yet → noted; roster is built at Phase 3 from this map.
+2. **Gates vs stacks:** every boundary needs a runnable check command on the dev host + CI; missing toolchain or CI-never-builds rows reported (candidate `50-enforcement.md` OWED rows if gating on).
+3. **Board vs reality (rule 14, `.blink/` present):** `blink:sync` or fallback compare vs `git log`; reconcile to git truth.
+Findings the user defers → recorded in STATE.md `## Notes`, not dropped.
 
 Then continue Phase 2 (03-architecture.md) with one adjustment: architecture doc has `## Current` (as-is, documented not judged) + `## Target` (remaining work only — never propose rewriting what's built unless user asked in Q6).

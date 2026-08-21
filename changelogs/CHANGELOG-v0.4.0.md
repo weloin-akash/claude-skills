@@ -19,6 +19,13 @@ Conventions proven in the air-transfer project (Jul–Aug 2026) folded back into
 
 - Project tracking via [`@weloin/blink`](https://www.npmjs.com/package/@weloin/blink) wired into the flow: 0-init/ALIGN installs (`npm i -g @weloin/blink@latest`) + `blink init .` (offered, declinable — fallback stays progress-files-only); phase breakdown mirrors to a milestone + `backlog` tasks; the task loop moves `.blink/tasks/` statuses and writes `.blink/decisions/` in the same commit as the work; `blink validate` after every write. Scope split: Blink = live state, `docs/project/` = config SSOT + history. project-setup remains the driver — only `blink:tracking`/`blink:setup` are delegated, never `blink:project`/`blink:execute`. New CLAUDE.md template block `## Project tracking (Blink)`.
 
+## Living roster + alignment
+
+- **Rule 13 — roster tracks boundaries**: the agent roster is re-derived from detected tech boundaries (language × platform × toolchain) at every plan completion, phase transition, and adoption — never frozen at setup by project type. Going single-platform → cross-platform triggers a roster delta (build/edit/retire agents + CLAUDE.md/contract/gate updates). A wave's gates must cover every stack it touched; CI that never builds one of the project's platforms is a drift finding.
+- **Rule 9 hardened — agent definitions always user-gated**: any create/edit/retire of `.claude/agents/*.md`, from any trigger, requires explicit user approval via the update-aware diff BEFORE the write, in every autonomy mode (AUTO never waives it). Applies to agent files and roster shape only — normal code/doc edits follow the autonomy mode.
+- **Rule 14 — agent-board sync**: `.blink/` is agent-consumed state, not a display: resume reads the board (`blocked_by`/`paused_reason` gate dispatch), drift reconciles to git truth via `blink:sync`/fallback, statuses move in the same commit as the work.
+- **ALIGN gains an initial-alignment pass (02 §5)**: on every existing-project adoption — roster vs boundary map, gates vs stacks (missing toolchain / CI-never-builds reported), board vs git reality — each delta user-approved before applying.
+
 ## New skills + plugins vendored
 
 - `caveman` family skills: `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review`, `caveman-stats`, `cavecrew`.

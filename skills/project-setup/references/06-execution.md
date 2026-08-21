@@ -62,15 +62,16 @@ Per task:
 1. Full test suite; record results table in progress file.
 2. Reviewer: spec conformance + (`medium+`) cross-agent conformance (contracts consistent, conventions uniform, no scope drift). Findings → fix loop.
 3. Security agent scan if roster has one (standard profile).
-4. Progress: phase status `complete` + date; README table updated.
+4. Progress: phase status `complete` + date; README table updated. Blink wired → milestone/task files closed (`done`), `blink validate`.
+4b. **Boundary-drift check (rule 13):** scan stacks touched this plan (build files, native dirs, CI targets) vs roster scope lines + gate commands. New/dead boundary → STOP: propose roster delta + CLAUDE.md/contract/gate updates via 04 §2 — user approves EVERY agent-file change (rule 9, all autonomy modes) — apply + commit before planning phase N+1.
 5. STATE.md: `phase: 4-planning`, `next: plan phase N+1 <name>` (or `project complete`).
 6. Merge per gitflow answer: gitflow → PR/merge feat branch to develop (invoke `superpowers:finishing-a-development-branch` if installed); worktree used → clean up after merge.
 7. Compressed completion report to user: shipped / test results / review findings resolved / gate verdicts + open concerns (STATE.md `## Concerns`; resolved ones cleared) / deviations from spec (also logged in progress notes) / next phase.
 
 ## Resume (any session, phase 5)
 
-1. Read STATE.md `next` + current progress file.
-2. `git log --oneline -5` — verify progress file matches reality; mismatch → reconcile progress file to git truth FIRST, commit, then continue. Reality broken (no git repo, referenced code missing, branch gone) → STOP, surface findings to user before executing anything.
+1. Read STATE.md `next` + current progress file. Blink wired → also read the board (rule 14): open `in_progress`/`blocked` tasks + `blocked_by`/`paused_reason` gate what may be dispatched.
+2. `git log --oneline -5` — verify progress file matches reality; mismatch → reconcile progress file to git truth FIRST, commit, then continue. Blink statuses disagree with progress/git → same protocol (`blink:sync` if installed, else reconcile to git truth, commit). Reality broken (no git repo, referenced code missing, branch gone) → STOP, surface findings to user before executing anything.
 3. Re-confirm autonomy only if user initiates with different intent; explicit intent in their message IS the confirmation ("hurry, full auto" → AUTO for this run) — pauses/reporting compress, but reviewer, tests, progress+STATE updates never do.
 
 ## Deviations
