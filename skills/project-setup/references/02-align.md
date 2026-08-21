@@ -45,6 +45,7 @@ Batched AskUserQuestion; ask ONLY what audit cannot answer:
 
 ## 4. Outputs
 
+- **Blink (SKILL.md rule 7):** existing tracking found in the audit (TODO files, issue lists, trackers) or user wants a live board → delegate `blink:setup` (surveys, converts on confirm); skill missing → `blink` CLI `blink init .` + CLAUDE.md block, or offer `npm i -g @weloin/blink@latest`; declined → progress files only.
 - `docs/project/STATE.md` — `phase: 2-architecture`, detected+confirmed values, `next: document current architecture + design remaining work`.
 - `docs/project/00-brief.md` — includes `## Current State` (what exists, from audit + user answer 4).
 - `docs/project/10-requirements.md` — existing features marked ✅ done; remaining work as requirements.

@@ -188,6 +188,13 @@ Utility (cavecrew, compressed output): `cavecrew-investigator` — locate code (
 - Branches: <pattern> | Commits: <style> (`commit_strategy` style)
 - Detailing: <detail> — <one-line what it means for body/granularity>
 - AI attribution in commits: <none | co-author | custom> (`commit_strategy` signature; defers to stricter global/project rule)
+
+## Project tracking (Blink) — not optional   <!-- only when .blink/ wired (rule 7) -->
+Live plan lives in `.blink/`, one file per entity, written BEFORE the work — write when you plan, start, finish, block or drop work, and when a real technical choice gets made.
+- Tasks: `backlog` → `planned` → `in_progress` → `done`; exits `dropped`, `blocked` (needs `blocked_by`), `paused` (needs `paused_reason`). Never delete a file.
+- A real choice becomes a file in `.blink/decisions/`. Run `blink validate` after every write; `0` = clean.
+- Scope: Blink = LIVE state only; `docs/project/` (STATE.md, progress, plans) stays config SSOT + history — never duplicated.
+Full contract: the `blink:tracking` skill; fields: `.blink/SCHEMA.md` — read both before your first write.
 ```
 
 ## progress/README.md

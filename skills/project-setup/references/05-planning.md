@@ -8,7 +8,7 @@ Break spec into phases; each phase yields working, testable software. Order per 
 |---|---|---|---|---|
 
 ALIGN path: pre-mark already-built work as phase(s) with status `complete`.
-User approves breakdown (gate).
+User approves breakdown (gate). Blink wired (rule 7) → mirror the approved breakdown: one milestone per phase, tasks at `backlog` (file written now, before work; `planned` when its plan is approved); `blink validate` after the write.
 
 ## 2. The macro-plan ask (EVERY time a phase plan is created)
 

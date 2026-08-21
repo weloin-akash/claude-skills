@@ -15,6 +15,10 @@ Conventions proven in the air-transfer project (Jul–Aug 2026) folded back into
 - New templates: contract doc, `50-enforcement.md` gates ledger, CLAUDE.md `## Style` block + expanded `## Rules`/`## Agents`.
 - New red flags: contract+consumers in one wave; adding a suppression; adding a freeze-list exception to pass; accepting "gates green" without captured evidence covering the changed boundary.
 
+## Blink integration
+
+- Project tracking via [`@weloin/blink`](https://www.npmjs.com/package/@weloin/blink) wired into the flow: 0-init/ALIGN installs (`npm i -g @weloin/blink@latest`) + `blink init .` (offered, declinable — fallback stays progress-files-only); phase breakdown mirrors to a milestone + `backlog` tasks; the task loop moves `.blink/tasks/` statuses and writes `.blink/decisions/` in the same commit as the work; `blink validate` after every write. Scope split: Blink = live state, `docs/project/` = config SSOT + history. project-setup remains the driver — only `blink:tracking`/`blink:setup` are delegated, never `blink:project`/`blink:execute`. New CLAUDE.md template block `## Project tracking (Blink)`.
+
 ## New skills + plugins vendored
 
 - `caveman` family skills: `caveman`, `caveman-commit`, `caveman-compress`, `caveman-help`, `caveman-review`, `caveman-stats`, `cavecrew`.

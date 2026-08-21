@@ -5,7 +5,8 @@
 1. `git init` if not a repo.
 2. Create `.gitignore` (see templates.md → gitignore; generic — extend with stack-specific entries after Round C stack choice).
 3. Create `docs/project/STATE.md` from template: `phase: 1-discovery`, everything else `TBD`.
-4. Commit: `chore: initialize project scaffold`.
+4. **Blink live board (SKILL.md rule 7):** `blink` CLI on PATH → `blink init .` (scaffolds `blink.json` + `.blink/`), add the CLAUDE.md `## Project tracking (Blink)` block (templates.md). CLI missing → offer `npm i -g @weloin/blink@latest` (installs CLI + the `blink:*` skills); declined → skip, progress files carry tracking alone.
+5. Commit: `chore: initialize project scaffold`.
 
 ## 1. Interview
 
