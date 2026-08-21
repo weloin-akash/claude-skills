@@ -18,7 +18,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
-import * as p from '@clack/prompts';
 
 const PKG_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_SRC = path.join(PKG_ROOT, 'skills');
@@ -312,6 +311,9 @@ if (flags.has('--all')) {
 } else {
   // interactive checkbox picker
   if (!process.stdout.isTTY) { console.error('No TTY — use --all or --skills=a,b,c'); process.exit(1); }
+  // @clack/prompts is only needed for the interactive picker; loading it lazily
+  // keeps `sync --silent` (npm postinstall) working before deps are installed.
+  const p = await import('@clack/prompts');
   p.intro('weloin-skills installer');
   const rideAlong = readCommands();
   if (rideAlong.length) p.log.info(`Slash commands installed alongside any selection: ${rideAlong.map((c) => c.name).join('  ')}`);
