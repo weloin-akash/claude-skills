@@ -146,7 +146,7 @@ BUILT = can go red today; OWED = rule stated, gate pending. Never assume a gate 
 ## CLAUDE.md (thin; MERGE if exists — never overwrite)
 
 ```markdown
-<!-- project-setup: v<skill version> — upgrade baseline stamp; `upgrade` diffs against this -->
+<!-- project-setup: v<version: from SKILL.md frontmatter> — upgrade baseline stamp; `upgrade` + the RESUME staleness probe diff against this -->
 # <Project>
 <one-line description>
 

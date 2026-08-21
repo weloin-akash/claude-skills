@@ -1,6 +1,7 @@
 ---
 name: weloin:project-setup
-description: Use when starting a new software project, initializing a project directory, aligning an existing codebase to structured agent-driven development, or resuming a project that has docs/project/STATE.md. Triggers - "set up project", "initialize project", "start new project", "align this project", "adopt this project", "continue the project", or any request for project requirements/architecture/plan setup.
+version: 0.4.0
+description: Use when starting a new software project, initializing a project directory, aligning an existing codebase to structured agent-driven development, resuming a project that has docs/project/STATE.md, or reviewing/updating a project's agent roster. Triggers - "set up project", "initialize project", "start new project", "align this project", "adopt this project", "continue the project", "review the roster", "update the agents", or any request for project requirements/architecture/plan setup.
 ---
 
 # Project Setup — Phase-Machine for Agent-Driven Development
@@ -21,8 +22,8 @@ Run: `cat docs/project/STATE.md 2>/dev/null; ls -a; git status 2>/dev/null | hea
 | `STATE.md` exists, user asks to re-initialize | Confirm destructive intent, then INIT |
 
 **RESUME staleness probe — bare invocation must know what to do; the user never needs to name a subcommand.** Three cheap checks before executing `next:`:
-1. **Skill drift:** CLAUDE.md `<!-- project-setup: vN -->` stamp older than this skill (or missing on a project this skill set up) → offer `upgrade`.
-2. **Boundary drift:** new build files / native dirs / lockfiles in `git log --stat --since=<STATE.md updated:>` (cheap grep for `Cargo.toml|go.mod|package.json|build.gradle|*.xcodeproj|src-tauri` etc.) that the roster's scope lines don't cover → offer `align`.
+1. **Skill drift:** CLAUDE.md `<!-- project-setup: vN -->` stamp older than this skill's `version:` frontmatter above (or stamp missing on a project this skill set up) → offer `upgrade`.
+2. **Boundary drift:** new build files / native dirs / lockfiles in `git log --stat --since="<STATE.md updated:> 00:00"` (the `00:00` is required — a bare date makes git fill in the CURRENT clock time and silently skip same-day commits; cheap grep for `Cargo\.toml|go\.mod|package\.json|build\.gradle|\.xcodeproj|src-tauri` etc.) that the roster's scope lines don't cover → offer `align`.
 3. **Board/progress mismatch:** already mandatory (rule 14 + 06 §Resume) — reconcile, no ask.
 Findings → ONE compact AskUserQuestion (continue as planned / align / upgrade / both-then-continue; default = continue with findings noted in STATE.md `## Notes`). No findings → resume silently. Explicit user intent in the invoking message ("just continue", "fix the roster") is the answer — don't re-ask.
 
@@ -34,7 +35,7 @@ Skill invoked with arguments (`/weloin:project-setup <subcommand> [free-text con
 
 **Every STATE.md config field is re-settable anytime** — a project already set up is never frozen. Each field below has a subcommand that shows the current value, re-asks (default = current), updates STATE.md (+ CLAUDE.md where the field surfaces) in one commit, and applies **going forward** — changes never retroactively restructure existing work (rule 6); when a new value would benefit already-built work, say so and offer it as opt-in, never auto-apply.
 
-**Intent routing — nobody needs to know subcommand names.** Subcommand words are shortcuts, not the interface. Any invocation text (or the surrounding user message) that doesn't start with a known subcommand is matched by INTENT to the right flow and run exactly as if its subcommand had been typed — e.g. "switch us to trunk-based" → `gitflow`; "we ship on k8s now" → `deploy`; "make the tests stricter" / "add a security gate" → `gates`; "this is production now" → `promote`; "we just added an iOS app" → `align`; "bring this project up to the latest conventions" → `upgrade`; "where are we" → `status`; "change how commits look" → `commits`. Ambiguous between two flows → one clarifying option-ask, never the table. Genuinely no match → one-line summary of what can be re-set + the table, take no action.
+**Intent routing — nobody needs to know subcommand names.** Subcommand words are shortcuts, not the interface. **Scope: applies ONLY while THIS skill is being invoked** — the surrounding user message is consulted solely to interpret an ambiguous or absent argument, never scanned to trigger flows mid-session. **Route only requests to CHANGE how work is done; requests to DO work (commit this, run the tests, deploy the server, fix the bug) are never intent-routed — they are normal work.** Invocation text that doesn't start with a known subcommand is matched by intent and run exactly as if its subcommand had been typed — e.g. "switch us to trunk-based" → `gitflow`; "we ship on k8s now" → `deploy`; "make the tests stricter" / "add a security gate" → `gates`; "this is production now" → `promote`; "we just added an iOS app" → `align`; "bring this project up to the latest conventions" → `upgrade`; "where are we" → `status`; "change how commits look" → `commits`; Blink setup/adoption → delegate `blink:setup` (rule 3), not a subcommand. **No STATE.md → the phase machine always wins:** run INIT/ALIGN and absorb the message as interview pre-answers ("make it production grade" → `maturity: production` pre-answered), never a config flow against nonexistent state. Ambiguous between two flows → one clarifying option-ask, never the table. Genuinely no match → one-line summary of what can be re-set + the table, take no action.
 
 | Subcommand | Loads | Action |
 |---|---|---|

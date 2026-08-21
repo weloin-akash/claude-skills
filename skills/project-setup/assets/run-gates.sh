@@ -37,6 +37,12 @@ while IFS='|' read -r id cmd || [ -n "${id:-}" ]; do
     printf '%-24s %-6s %s\n' "$id" "FAIL" "(invalid gate id — allowed: A-Za-z0-9._-)"
     overall=1; continue ;;
   esac
+  # trim cmd; empty/missing command is a config FAIL, never a vacuous PASS
+  cmd="${cmd#"${cmd%%[![:space:]]*}"}"; cmd="${cmd%"${cmd##*[![:space:]]}"}"
+  if [ -z "$cmd" ]; then
+    printf '%-24s %-6s %s\n' "$id" "FAIL" "(no command — line must be <id>|<command>)"
+    overall=1; continue
+  fi
   log="$EVID/${GROUP}-${id}.log"
   # Toolchain probe only when the first word is a plain command name;
   # env-prefixed / subshell / complex commands just run (their own failure is the verdict).
