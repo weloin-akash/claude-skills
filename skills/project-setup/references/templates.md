@@ -264,6 +264,7 @@ description: Use when <specific trigger for this project — third person>
 tools: <per role table in 04-agents.md>
 model: opus | sonnet | inherit
 memory: project
+# orchestrator def only: + the SessionStart STATE.md hooks block (04 §5)
 ---
 You are the <role> for <project>.
 

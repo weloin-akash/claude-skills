@@ -90,9 +90,14 @@ Existing agent names collide → update-aware diff (§2), never blind-overwrite.
 
 - Create/merge thin `CLAUDE.md` per templates.md (index → SSOT, strategy, agent workflow, alignment rules, git rules).
 - `.claude/settings.json` default-agent (`{"agent": "orchestrator"}`): ONLY when `orchestration: agent/default-agent` — ASK first (side effect on every session), write only on yes. Other modes → never offer; file already sets `"agent": "orchestrator"` while mode ≠ default-agent → ask to remove (rule 6 — never silent).
-- **STATE-at-session-start hook (offer, ASK first — same side-effect caution):** mechanizes "read STATE.md first" for the INTERACTIVE session (the orchestrator/main seat) — `SessionStart` does not fire for dispatched subagents, and they don't need it: their context arrives in the dispatch text. On yes, merge into `.claude/settings.json`:
-  ```json
-  {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "cat docs/project/STATE.md 2>/dev/null || true"}]}]}}
+- **STATE-at-session-start hook — in the ORCHESTRATOR's agent def, not settings.json:** mechanizes "read STATE.md first" exactly where it belongs — the orchestrator seat. Lives in `.claude/agents/orchestrator.md` frontmatter (so it ships with the roster, is covered by the rule-9 agent-file approval, and never fires for builders/subagents — their context arrives in the dispatch text):
+  ```yaml
+  hooks:
+    SessionStart:
+      - matcher: ".*"
+        hooks:
+          - type: command
+            command: "cat docs/project/STATE.md 2>/dev/null || true"
   ```
 
 ## 6. Transition
