@@ -30,6 +30,7 @@ A set-up project is never frozen. Each command shows the current value, re-asks,
 | Subcommand | Does |
 |---|---|
 | `agents` | Review / update the agent roster |
+| `align` *(`realign`)* | On-demand alignment pass for an adopted project: boundary map (languages × platforms × toolchains) → roster / gates / board / CLAUDE.md deltas, each user-approved. Use after adding a platform or language |
 | `plan` | Plan the next phase now |
 | `status` | Compressed project-state report (read-only) |
 | `help` | Print the subcommand table |
