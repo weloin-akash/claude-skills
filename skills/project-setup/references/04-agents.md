@@ -90,6 +90,10 @@ Existing agent names collide → update-aware diff (§2), never blind-overwrite.
 
 - Create/merge thin `CLAUDE.md` per templates.md (index → SSOT, strategy, agent workflow, alignment rules, git rules).
 - `.claude/settings.json` default-agent (`{"agent": "orchestrator"}`): ONLY when `orchestration: agent/default-agent` — ASK first (side effect on every session), write only on yes. Other modes → never offer; file already sets `"agent": "orchestrator"` while mode ≠ default-agent → ask to remove (rule 6 — never silent).
+- **STATE-at-session-start hook (offer, ASK first — same side-effect caution):** mechanizes "read STATE.md first" instead of trusting prose. On yes, merge into `.claude/settings.json`:
+  ```json
+  {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "cat docs/project/STATE.md 2>/dev/null"}]}]}}
+  ```
 
 ## 6. Transition
 
