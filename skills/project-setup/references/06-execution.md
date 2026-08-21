@@ -63,7 +63,7 @@ Per task:
 2. Reviewer: spec conformance + (`medium+`) cross-agent conformance (contracts consistent, conventions uniform, no scope drift). Findings → fix loop.
 3. Security agent scan if roster has one (standard profile).
 4. Progress: phase status `complete` + date; README table updated. Blink wired → milestone/task files closed (`done`), `blink validate`.
-4b. **Boundary-drift check (rule 13):** scan stacks touched this plan (build files, native dirs, CI targets) vs roster scope lines + gate commands. New/dead boundary → STOP: propose roster delta + CLAUDE.md/contract/gate updates via 04 §2 — user approves EVERY agent-file change (rule 9, all autonomy modes) — apply + commit before planning phase N+1.
+4b. **Boundary-drift check (rule 13):** scan stacks touched this plan (build files, native dirs, CI targets) vs roster scope lines + gate commands. New/dead boundary → STOP: propose roster delta + CLAUDE.md/contract/gate updates via 04 §2 — user approves EVERY agent-file and CLAUDE.md diff (rule 9, all autonomy modes) — apply + commit before planning phase N+1.
 5. STATE.md: `phase: 4-planning`, `next: plan phase N+1 <name>` (or `project complete`).
 6. Merge per gitflow answer: gitflow → PR/merge feat branch to develop (invoke `superpowers:finishing-a-development-branch` if installed); worktree used → clean up after merge.
 7. Compressed completion report to user: shipped / test results / review findings resolved / gate verdicts + open concerns (STATE.md `## Concerns`; resolved ones cleared) / deviations from spec (also logged in progress notes) / next phase.

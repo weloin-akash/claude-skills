@@ -30,7 +30,7 @@ Present roster as table: name / role / scope (dirs) / tools / model. AskUserQues
 3. User approves diff. Update = edit in place preserving user's manual customizations (anything not conflicting with new scope). Retire = ask before delete; default: leave file, note deprecated in its description.
 Never blind-overwrite an existing agent file.
 
-**This flow gates EVERY agent-file change, from any trigger** — phase-3 roster design, `agents` subcommand, boundary-drift delta (rule 13), initial alignment (02 §5), or an incidental "the agent def needs a tweak" mid-execution. Rule 9: user approval BEFORE the write, in every autonomy mode — AUTO never waives it. Normal code/doc edits are untouched by this gate.
+**This flow gates EVERY agent-file AND CLAUDE.md change, from any trigger** — phase-3 roster design, `agents` subcommand, boundary-drift delta (rule 13), initial alignment (02 §5), a convention change, or an incidental "the agent def needs a tweak" mid-execution. Present the concrete diff (agent files + the CLAUDE.md lines that change with them); rule 9: user approval BEFORE the write, in every autonomy mode — AUTO never waives it. Normal code/doc edits are untouched by this gate.
 
 ## 3. Agent file format
 
