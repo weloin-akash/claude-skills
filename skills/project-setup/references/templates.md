@@ -167,6 +167,7 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 - Doc style: detailed-compressed (dense, complete, no filler)
 - <testing requirement>
 - Code shape: small single-responsibility files (~800-line soft cap, boy-scout split); tests in per-module `tests/` subfolders (or stack mirror convention) — never inline/sibling test files
+- Comments: WHY only, never WHAT — default zero (delete test: comment must add info the code lacks). Narration, signature restating, banners, commented-out code, changelog comments = defects; allowed: rationale/spec refs, safety invariants, `ponytail:` markers, one-line API docs, TODO+debt row
 - Task done ⇒ progress + STATE.md updated in same commit
 - Conscious shortcut ⇒ row in `docs/project/40-debt.md`, same commit   <!-- maturity: prototype|mvp only -->
 - Agent conflicts (scope/conventions/interfaces) → escalate to user, never silent
@@ -179,7 +180,7 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 ## Style (always on)   <!-- style skills accepted at roster approval (04 §Style skills) -->
 Two project skills define how everyone writes and codes — ENABLED BY DEFAULT for every agent and session; invoke via Skill tool only for the full text:
 - **`caveman`** (plugin, or project skill `.claude/skills/caveman/SKILL.md` — per install tier, 04 §Style skills) — terse prose for reports/reviews/audits/plans/progress. Drop filler, keep ALL substance (file:line refs, real numbers, verbatim errors). NORMAL prose in code, comments, commit messages, security warnings, order-critical sequences.
-- **`ponytail`** (plugin, or project skill `.claude/skills/ponytail/SKILL.md` — per install tier) — laziest solution that works: reuse ladder, no unrequested abstractions, deletion over addition; mark corner-cuts with a `ponytail:` comment naming ceiling + upgrade path (+ `40-debt.md` row when a real shortcut). Never simplify away trust-boundary validation, error handling, security, spec requirements, or tests.
+- **`ponytail`** (plugin, or project skill `.claude/skills/ponytail/SKILL.md` — per install tier) — laziest solution that works: reuse ladder, no unrequested abstractions, deletion over addition; mark corner-cuts with a `ponytail:` comment naming ceiling + upgrade path (+ `40-debt.md` row when a real shortcut); comments WHY-only, never WHAT (skill §Comments — narration/banners/commented-out code are defects). Never simplify away trust-boundary validation, error handling, security, spec requirements, or tests.
 Agent defs carry the same rules inline (zero invocation cost); the skills are the canonical long form — change both together.
 
 ## Agents

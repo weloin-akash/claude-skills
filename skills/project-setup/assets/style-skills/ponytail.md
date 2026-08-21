@@ -39,6 +39,23 @@ Name the **ceiling** (when it breaks) and the **upgrade path** (what replaces it
 real shortcut rather than a judgement call, it also gets a row in `docs/project/40-debt.md` in
 the SAME commit — that is the project rule at `mvp` maturity.
 
+## Comments — WHY, never WHAT
+
+Default is ZERO comments. An agent (or any reader) understands a code block; narrating it is
+noise that rots. Every comment must survive the delete test: *delete it — does the reader lose
+information NOT already in the code?* No → delete it.
+
+Allowed (whitelist — everything else is a defect):
+- **WHY**: non-obvious rationale, workaround, spec/issue ref (`// nonce = sessionId+blockIdx per spec §4`)
+- **Invariant/safety**: order-critical or data-loss warning (`// seal BEFORE send; reversed leaks the key`)
+- **`ponytail:` corner-cut markers** (section above)
+- **Public-API doc comments** (rustdoc/godoc/JSDoc) — one line unless the API is genuinely subtle
+- **TODO/FIXME** — only with a debt row or ticket ref
+
+Banned: narration (`// loop over peers`), restating the signature, section banners
+(`// ==== helpers ====`), commented-out code (git remembers), changelog comments (git blame
+exists). Boy-scout: narration comments in any hunk you touch die with the edit.
+
 ## NEVER simplify these away
 
 Laziness stops at the trust boundary. Not negotiable:

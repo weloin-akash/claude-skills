@@ -61,7 +61,7 @@ Memory: native `memory: project` frontmatter — no manual MEMORY.md seeding. Me
 
 **Style skills (default ON — part of the roster approval, user may decline):** two style disciplines ship with this skill and get installed as project skills in every project:
 - `caveman` — terse prose for reports/reviews/plans/progress (all substance kept: file:line refs, real numbers, verbatim errors; NORMAL prose in code/comments/commits/security warnings).
-- `ponytail` — laziest solution that works (reuse ladder, no unrequested abstractions, deletion over addition; `ponytail:` comment marks a deliberate corner-cut naming ceiling + upgrade path, + `40-debt.md` row when it's a real shortcut; never simplify trust-boundary validation, error handling, security, spec requirements, tests).
+- `ponytail` — laziest solution that works (reuse ladder, no unrequested abstractions, deletion over addition; `ponytail:` comment marks a deliberate corner-cut naming ceiling + upgrade path, + `40-debt.md` row when it's a real shortcut; comments WHY-only, never WHAT — narration, banners, commented-out code are defects, whitelist in skill §Comments; never simplify trust-boundary validation, error handling, security, spec requirements, tests).
 
 Install — two tiers, pick the highest available:
 1. **Plugins (preferred — hooks make the modes always-on, no invocation needed):** `caveman` + `ponytail` plugins already active (their `SessionStart` hooks announce `CAVEMAN MODE ACTIVE` / `PONYTAIL MODE ACTIVE`) → nothing to install. Not active → they ship with this skill's repo (`plugins/caveman`, `plugins/ponytail` + root `.claude-plugin/marketplace.json`): offer `claude plugin marketplace add <repo>` + install both; user declines plugin install → tier 2.
