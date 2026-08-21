@@ -17,8 +17,14 @@ Run: `cat docs/project/STATE.md 2>/dev/null; ls -a; git status 2>/dev/null | hea
 |---|---|
 | No `STATE.md`, empty/near-empty dir | INIT → read `references/01-interview.md` |
 | No `STATE.md`, existing code/git history | ALIGN → read `references/02-align.md` |
-| `STATE.md` exists | RESUME → read reference file for the recorded `phase`; execute its `next:` action |
+| `STATE.md` exists | RESUME → staleness probe (below), then read reference file for the recorded `phase`; execute its `next:` action |
 | `STATE.md` exists, user asks to re-initialize | Confirm destructive intent, then INIT |
+
+**RESUME staleness probe — bare invocation must know what to do; the user never needs to name a subcommand.** Three cheap checks before executing `next:`:
+1. **Skill drift:** CLAUDE.md `<!-- project-setup: vN -->` stamp older than this skill (or missing on a project this skill set up) → offer `upgrade`.
+2. **Boundary drift:** new build files / native dirs / lockfiles in `git log --stat --since=<STATE.md updated:>` (cheap grep for `Cargo.toml|go.mod|package.json|build.gradle|*.xcodeproj|src-tauri` etc.) that the roster's scope lines don't cover → offer `align`.
+3. **Board/progress mismatch:** already mandatory (rule 14 + 06 §Resume) — reconcile, no ask.
+Findings → ONE compact AskUserQuestion (continue as planned / align / upgrade / both-then-continue; default = continue with findings noted in STATE.md `## Notes`). No findings → resume silently. Explicit user intent in the invoking message ("just continue", "fix the roster") is the answer — don't re-ask.
 
 Phase → reference map: `0-init`/`1-discovery`→01 (ALIGN path: →02; it writes `2-architecture` directly on completion), `1b-ux-prototype`→07, `2-architecture`→03, `3-agents`→04, `4-planning`→05, `5-execution`→06. All file/doc skeletons live in `references/templates.md` — load it whenever a phase creates files. "Load ONE reference" = one per phase; a phase transition legitimately loads the next routed file. Never pre-read others.
 

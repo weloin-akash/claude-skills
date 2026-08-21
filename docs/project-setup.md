@@ -2,7 +2,7 @@
 
 A phase-machine for agent-driven development. It runs your project through structured phases — first interview → shipped code — with every decision recorded in `docs/project/STATE.md` so any future session resumes exactly where the last stopped.
 
-Start it with `/weloin:project-setup` (or just say "set up a new project"). See the [per-feature execution flow](./execution-flow.md) for what a single change looks like once set up.
+Start it with `/weloin:project-setup` (or just say "set up a new project"). Bare invocation always knows what to do: fresh dir → INIT, existing code → ALIGN, adopted project → RESUME with a staleness probe that offers `align`/`upgrade` when the project drifted — you never need to know a subcommand name. See the [per-feature execution flow](./execution-flow.md) for what a single change looks like once set up.
 
 ## Subcommands
 
