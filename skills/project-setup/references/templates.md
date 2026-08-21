@@ -151,7 +151,7 @@ BUILT = can go red today; OWED = rule stated, gate pending. Never assume a gate 
 <one-line description>
 
 ## SSOT
-State: `docs/project/STATE.md` — read FIRST every session. Spec: `docs/project/20-architecture.md`. Progress: `docs/project/progress/`. All work conforms to spec; deviations get logged (progress notes + ADR).
+State: `docs/project/STATE.md` — read FIRST every session (session/orchestrator seat; builders receive state in dispatch text). Spec: `docs/project/20-architecture.md`. Progress: `docs/project/progress/`. All work conforms to spec; deviations get logged (progress notes + ADR).
 
 ## Development Strategy
 <strategy>: <one line what it means for build order>
@@ -272,7 +272,7 @@ You are the <role> for <project>.
 - Owns: <dirs/files>. Does not touch: <other agents' dirs>.
 
 ## References (read at task start)
-- `docs/project/STATE.md`, `CLAUDE.md`, spec §<sections for this domain>
+- `CLAUDE.md`, spec §<sections for this domain>   <!-- orchestrator def only: + docs/project/STATE.md — builders get state via dispatch text (04 §4) -->
 
 ## Conventions
 - <stack standards, testing requirement, doc style: detailed-compressed>
