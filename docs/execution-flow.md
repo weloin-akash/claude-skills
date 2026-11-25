@@ -50,3 +50,26 @@ flowchart TD
 - **Claude acts (🤖):** everything else — isolation setup, planning, the builder/reviewer/gatekeeper subagents, commits, merge, and the STATE.md update that makes the next session resume-ready.
 - **Config steers, doesn't re-ask:** `worktrees` picks the isolation branch, `gitflow` the branch model, `commit_strategy` the commit shape, `autonomy` the pause cadence — all set once, applied every change.
 - **Invariant:** every task's progress checkbox + `STATE.md next:` land in the *same commit* as the work — that's the resume guarantee.
+
+## When the change is a fix
+
+The "Fix loop" box is its own procedure (`references/08-fix-loop.md`), because a fix written like a feature tends to break a neighbouring path:
+
+```mermaid
+flowchart TD
+    Bug([🧑 Bug report / red gate]) --> Ev[🤖 Evidence first: logs, trace, repro]
+    Ev --> Seen{Cause visible?}
+    Seen -->|no| Instr[🤖 Instrument + reproduce] --> Ev
+    Seen -->|yes| Brief[🤖 scripts/fix-brief.sh → fill the diff spec, must-not-move, working paths]
+    Brief --> Apply[🤖 One agent applies the spec verbatim]
+    Apply --> Rep{Report has Working paths + Self-pass?}
+    Rep -->|no| Reject[🤖 Rejected, unmerged] --> Apply
+    Rep -->|yes| Rev[🤖 Pre-merge review: what did this remove that another path relied on?]
+    Rev -->|new bug named| Round{Round?}
+    Round -->|2: shrink only, same agent| Apply
+    Round -->|3: stop — diagnose the invariant| Brief
+    Round -->|4| User([🧑 Escalate])
+    Rev -->|clean| Merge[🤖 Merge + regression check + re-gate the red legs]
+```
+
+Push, release and deploy are never part of this loop — they wait for your word (`references/09-release-ops.md`).

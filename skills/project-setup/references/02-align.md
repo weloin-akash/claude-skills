@@ -60,6 +60,8 @@ One pass, compressed report, user approves each delta before applying (rule 6 ho
 1. **Roster vs boundary map (rule 13):** existing `.claude/agents/` scope lines vs the audit's boundary map → uncovered boundary / stale agent / scope overlap table; deltas via 04 §2 update-aware diff. No agents yet → noted; roster is built at Phase 3 from this map.
 2. **Gates vs stacks:** every boundary needs a runnable check command on the dev host + CI; missing toolchain or CI-never-builds rows reported (candidate `50-enforcement.md` OWED rows if gating on).
 3. **Board vs reality (rule 14, `.blink/` present):** `blink:sync` or fallback compare vs `git log`; reconcile to git truth.
+4. **Working paths (rule 15):** ask which end-to-end paths already work and must never break (audit answer 4 seeds the list) → CLAUDE.md `## Working paths`, each with how it is exercised. An adopted project with users has these whether or not anyone wrote them down.
+5. **State + memory hygiene (rules 19–20):** an existing STATE.md over its 6 KB budget, or a memory index that has become a journal → propose the fold (history → progress files / topic files); standing instructions found in chat history or memory → STATE.md `## Holds`.
 Findings the user defers → recorded in STATE.md `## Notes`, not dropped.
 
 Then continue Phase 2 (03-architecture.md) with one adjustment: architecture doc has `## Current` (as-is, documented not judged) + `## Target` (remaining work only — never propose rewriting what's built unless user asked in Q6).

@@ -6,6 +6,7 @@ All docs: detailed-compressed style — dense bullets/tables, no filler, no mean
 
 ```markdown
 # Project State
+<!-- header, not a journal: one line per field, whole file < 6 KB; history lives in progress files -->
 phase: 1-discovery        # 0-init|1-discovery|1b-ux-prototype|2-architecture|3-agents|4-planning|5-execution
 autonomy_default: GUIDED  # AUTO|GUIDED|MANUAL
 strategy: TBD             # vertical-slice|integration-test-first|server-first|ui-complete-first|contract-first|infrastructure-first|prototype-first|inside-out|walking-skeleton|behavior-first|data-first|event-first|eval-first|strangler-fig|spike-and-stabilize|custom
@@ -24,6 +25,9 @@ updated: YYYY-MM-DD
 
 ## Notes
 - <session-relevant context that fits nowhere else; keep ≤10 lines>
+
+## Holds   <!-- standing user instructions that gate actions (rule 20); written when given, removed only when the user releases them -->
+- YYYY-MM-DD <what is held: "no push until told", "don't touch <area>", "no device rebuild"> — released: —
 
 ## Concerns   <!-- gated dev only; DONE_WITH_CONCERNS entries; batch-surfaced at next boundary/session end; clear when resolved -->
 - YYYY-MM-DD <gate> <task-group>: <one-line concern> → docs/project/gates/<task-group>-gate.md
@@ -114,7 +118,7 @@ Fixtures = machine-readable truth; this doc = compressed index. Divergence = bug
 | 1 | <conscious shortcut, e.g. auth stubbed> | <what hardening requires> | YYYY-MM-DD | open |
 ```
 
-Every conscious shortcut = row, same commit as the work. Rows never deleted; resolved → `resolved (<commit/plan ref>)`. `promote` sources its hardening plan from open rows.
+Every conscious shortcut = row, same commit as the work. Rows never deleted; resolved → `resolved (<commit/plan ref>)`. `promote` sources its hardening plan from open rows. Ids are minted by the session only, in disjoint blocks when agents run in parallel (rule 18) — the file's last line records `next free: #N`. Append-only: merge per row, never `-X ours|theirs` (06 §Ops rules).
 
 ## Contract doc (rule 12; medium+ & mvp+) → `docs/project/contracts/<boundary>.md`
 
@@ -176,6 +180,16 @@ Convention: `make <env|surface> <action> [args]`. Examples: `make local up` (boo
 - Contracts: work against the boundary contract (`docs/project/contracts/`), never the layer below; contract change = own commit, landed first   <!-- medium+ -->
 - Zero warnings; never suppress a warning or purity/contract violation to compile   <!-- mvp+ -->
 - Capabilities, never platforms: feature/UI code branches on declared capability flags, not OS/vendor checks
+- Regression closure: a fix report without `## Working paths` (`path | old | new | pin`) + `## Self-pass` is rejected unmerged; every fix diff gets a pre-merge "what did this remove that another path relied on" review
+- Fix loop: evidence before code; fix briefs are diff specs (`scripts/fix-brief.sh`); round ≥2 only shrinks; third red = diagnose the invariant, fourth = user
+- A test is a pin only after a mutation turned it RED; a red test is never fixed by editing the test
+- Heavy suites + lint matrix run once per plan; per task = compile/typecheck + the task's own tests
+- One fact, one owner: ask the owning module, add a phase to it — never a sibling flag; ids and tracking files (STATE, progress, debt, board) are written by the session only
+- Shared checkout: no `git add -A` / `stash` / `checkout --` with another agent live; append-only files merge per row
+- Push / release / deploy / device install / deletion: only on the user's word for that action; holds live in STATE.md `## Holds`
+
+## Working paths (must not break)   <!-- the product's proven end-to-end paths; every fix brief names them; grows as slices ship -->
+- <path, e.g. "sign-in → first sync on a fresh install"> — <how it is exercised: test / gate leg / device step>
 
 ## Style (always on)   <!-- style skills accepted at roster approval (04 §Style skills) -->
 Two project skills define how everyone writes and codes — ENABLED BY DEFAULT for every agent and session; invoke via Skill tool only for the full text:
@@ -279,9 +293,70 @@ You are the <role> for <project>.
 - <stack standards, testing requirement, doc style: detailed-compressed>
 - Code shape rule 11; contracts rule 12 (work against `docs/project/contracts/`, never the layer below; no suppressions)   <!-- + inline style-skill rules (04 §Style skills) if installed -->
 
+## Regression closure (fix tasks)   <!-- builder defs -->
+1. Apply the brief's diff spec verbatim. Deviation, extra mechanism, "while I'm here" ⇒ STOP, report `spec-wrong: <path:line> <why>`.
+2. `## Working paths` table — every caller, concurrent caller, mirror role, harvested MUST-HOLD line: `path | old | new | pin` (old includes accidental properties).
+3. Changed row → a test whose mutation went RED; unchanged row → grep evidence. A moved bound names its new number.
+4. `## Self-pass` before committing: "what did my diff remove that another path relied on; the most likely new bug" — fix it in this run. Only PRE-EXISTING issues may be reported as residuals.
+5. Round ≥2: BLOCKs only; delete/shrink the mechanism, never the behaviour or a working path.
+
+## Never
+- Edit STATE.md, progress, debt ledger, board, orchestrator memory; mint a debt/migration/task id; run the full suite unless the brief says so.
+- `git add -A` / `stash` / `checkout --`; add a suppression; edit a test to make it pass.
+
 ## Reporting
-- What built/changed, tests run+results, **shared interfaces touched** (APIs/types/schemas) + **contract deltas**, shortcuts taken (debt candidates; prototype/mvp), deviations.
+- What built/changed, commit sha, commands with their result lines (ONE test count, ONE place), **shared interfaces touched** (APIs/types/schemas) + **contract deltas**, shortcuts taken (debt candidates; prototype/mvp), deviations.
+- Fix task: + `## Working paths`, `## Self-pass`, `## Pins` (mutation → test → RED), `## Residuals`.
 ```
+
+## Fix brief → generated, never hand-written
+
+`bash scripts/fix-brief.sh <touched files> > <brief file>` (script copied from `assets/fix-brief.sh` at the first fix — 08 §2). Sections: Cause · Diff spec · Must-not-move · Behaviour to deliver · Working paths to keep · MUST-HOLD (harvested) · Callers · Pins · Consequence pass · Working-paths table · Proof · Apply mode · Report · Commit. An empty `## Diff spec` is not dispatched.
+
+## Fix report (returned by the agent; persisted in the progress file at merge)
+
+```markdown
+## Working paths
+| path | old | new | pin |
+|---|---|---|---|
+## Self-pass
+## Pins
+- <mutation> → <test> → RED
+## Contract delta
+## Residuals
+commit: <sha>   commands: <cmd → result line>
+```
+
+## Acceptance record (mvp+) → `docs/project/acceptance/<phase>.md`
+
+```markdown
+# Acceptance — <phase / version>
+| # | Criterion (from plan exit criteria) | Evidence | Status |
+|---|---|---|---|
+| 1 | <criterion> | <code ref · pin (mutation-proven) · gate capture path · device observation + build sha> | met \| open \| waived (<who, date>) |
+```
+
+A criterion backed only by an unproven test or an agent's say-so stays `open`.
+
+## Runbook → `docs/project/runbooks/<name>.md` (written the FIRST time a release / deploy / device procedure runs — 09 §8)
+
+```markdown
+# Runbook — <procedure>
+when: <trigger>   needs: <access, secret NAMES, toolchain>   user-gated: yes|no
+1. <exact command> — expect: <result line>
+## Traps met
+- <what went wrong once> → <the check that now catches it>
+```
+
+## Orchestrator memory → `.claude/agent-memory/orchestrator/MEMORY.md` (index only, ≤200 lines)
+
+```markdown
+# orchestrator memory
+Progress/state is NOT here: STATE.md first, then progress, then `git log`.
+- [<topic>](<topic>.md) — <one-line hook, <150 chars>
+```
+
+One lesson = one `## <slug>` section in a topic file, with **Why** and **How to apply**. Not stored: anything code, git, or the progress files already show. A lesson recorded a second time is promoted to a mechanism instead (rule 19).
 
 ## .gitignore (init path)
 
